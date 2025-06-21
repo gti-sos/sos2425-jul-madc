@@ -1,0 +1,52 @@
+{
+  "name": "sos2425-jul-madc",
+  "version": "1.0.0",
+  "description": "A project based on analyzing grants and subsidies from the Generalitat Valenciana, employment contracts by municipality, gender, age, and sector, and temporary employment regulation files (ERTE)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "npm run test-MADC-local",
+    "test-online": "npm run test-MADC-online",
+    "test-local": "npm run test-MADC-local",
+    "test-dana-grants-subsidies-stats-local": "npx newman run tests/back/dana-grants-subsidies-stats-test.json -e tests/back/api-env-local.json",
+    "test-dana-grants-subsidies-stats-online": "npx newman run tests/back/dana-grants-subsidies-stats-test.json -e tests/back/api-env-online.json",
+    "test-MADC-local": "start-server-and-test start http://localhost:3000 test-dana-grants-subsidies-stats-local",
+    "test-MADC-online": "start-server-and-test start https://sos2425-jul-madc.onrender.com test-dana-grants-subsidies-stats-online",
+    "build": "cd src/front; npm install; npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gti-sos/SOS2425-jul-madc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gti-sos/SOS2425-jul-madc/issues"
+  },
+  "homepage": "https://github.com/gti-sos/SOS2425-jul-madc#readme",
+  "dependencies": {
+    "@sveltejs/adapter-node": "^5.2.12",
+    "@sveltestrap/sveltestrap": "^7.1.0",
+    "bootstrap": "^5.3.6",
+    "chart.js": "^4.4.9",
+    "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
+    "csv-parser": "^3.2.0",
+    "echarts": "^5.6.0",
+    "express": "^4.21.2",
+    "highcharts": "^12.2.0",
+    "nedb": "^1.8.0",
+    "node-fetch": "^3.3.2",
+    "request": "^2.88.2",
+    "svelte": "^5.27.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.40.0",
+    "@types/node": "^22.14.1",
+    "rollup": "^4.17.0",
+    "start-server-and-test": "^2.0.11",
+    "vite": "^6.3.0"
+  }
+}
