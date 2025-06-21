@@ -14,7 +14,6 @@
 </style>
 
 <div class="center-container">
-  <Button color="primary" href="/integrations/MADC/G13">G13</Button>
   <Button color="primary" href="/integrations/MADC/G14">G14</Button>
   <Button color="primary" href="/integrations/MADC/G20">G20</Button>
   <Button color="primary" href="/integrations/MADC/AidsCastillaLeon">Aids Castilla y León</Button>
