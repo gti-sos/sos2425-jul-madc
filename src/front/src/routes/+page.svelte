@@ -92,8 +92,6 @@
   <h2>Integraciones</h2>
   <ul>
     <li><a href="/integrations/MADC">/integrations/MADC</a> (Miguel Ángel Dominguez Ciero)</li>
-    <li><a href="/analytics">/analytics</a>(Integración total del grupo)</li>
-
   </ul>
 
   <h2>Videos</h2>

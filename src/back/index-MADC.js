@@ -54,7 +54,7 @@ async function readAllDataMADC(ruta) {
             obj[key] = (elem === '' || elem === null) ? null : elem;
         });
         return obj;
-    }).filter(aid => aid.benef_id !== null);
+    }).filter(aid => aid.benef_id !== null && aid.benef_id !=="benef_id");
     return data;
 }
 
@@ -84,7 +84,7 @@ async function readAllDataMuncipalites(ruta) {
             obj[key] = (elem === '' || elem === null) ? null : elem;
         });
         return obj;
-    }).filter(mun => mun.mun_name !== null);
+    }).filter(mun => mun.mun_name !== null && mun.mun_name !=="mun_name");
     return data;
 }
 objData= await readAllDataMADC("./datasets/Ejemplo-Ayudas-Subvenciones-DANA-4TR(;).csv");
