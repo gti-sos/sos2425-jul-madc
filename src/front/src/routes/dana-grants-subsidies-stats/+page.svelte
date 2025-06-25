@@ -685,7 +685,7 @@
 
                 <!-- Fecha -->
                 <Card class="mb-2">
-                    <CardHeader on:click={() => showFecha = !showFecha} style="cursor: pointer;">
+                    <CardHeader on:click={() => showFecha = !showFecha} id="flecha-fecha" style="cursor: pointer;">
                         <h5>Fecha
                             <span style="float: right;">
                                 <i class="bi {showFecha ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
@@ -721,7 +721,7 @@
 
                 <!-- Ubicación -->
                 <Card class="mb-2">
-                    <CardHeader on:click={() => showUbicacion = !showUbicacion} style="cursor: pointer;">
+                    <CardHeader on:click={() => showUbicacion = !showUbicacion} id="flecha-ubicacion" style="cursor: pointer;">
                         <h5>Ubicación
                             <span style="float: right;">
                                 <i class="bi {showUbicacion ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
@@ -756,7 +756,7 @@
 
                 <!-- Concedente -->
                 <Card class="mb-2">
-                <CardHeader on:click={() => showConcedente = !showConcedente} style="cursor: pointer;">
+                <CardHeader on:click={() => showConcedente = !showConcedente} id="flecha-concedente" style="cursor: pointer;">
                    <h5>Concedente
                         <span style="float: right;">
                             <i class="bi {showConcedente ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
@@ -814,7 +814,7 @@
 
                 <!-- Carácter -->
                 <Card class="mb-2">
-                <CardHeader on:click={() => showCaracter = !showCaracter} style="cursor: pointer;">
+                <CardHeader on:click={() => showCaracter = !showCaracter} id="flecha-caracter" style="cursor: pointer;">
                     <h5>Carácter
                         <span style="float: right;">
                             <i class="bi {showCaracter ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
@@ -843,7 +843,7 @@
 
                 <!-- Financiación -->
                 <Card class="mb-2">
-                <CardHeader on:click={() => showFinanciacion = !showFinanciacion} style="cursor: pointer;">
+                <CardHeader on:click={() => showFinanciacion = !showFinanciacion} id="flecha-financiacion" style="cursor: pointer;">
                     <h5>Financiación
                         <span style="float: right;">
                             <i class="bi {showFinanciacion ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
@@ -971,15 +971,40 @@
             <div class="d-flex justify-content-end mt-3">
             <Button color="primary" type="submit">Aplicar filtros</Button>
             <Button color="secondary" class="ms-2" on:click={() => {
-                filtroYear = "";
-                filtroMonth = "";
-                filtroProvName = "";
-                filtroMunName = "";
-                filtroFrom = "";
-                filtroTo = "";
-                filtroLimit = "";
-                filtroPage = "";
+                filtroGrantDate="";
+                filtroYear= "";
+                filtroMonth= "";
+                filtroRegionName= "";
+                filtroProvName= "";
+                filtroMunName= "";
+
+                filtroGrantor= "";
+
+                filtroBenefId= "";
+                filtroBenefName= "";
+                filtroBenefType= "";
+
+                filtroAidType= "";
+                filtroPurpose= "";
+                filtroFundType= "";
+                filtroFundEu= "";
+                filtroFundState= "";
+                filtroFundRegional= "";
+                filtroFundLocal= "";
+                filtroFundOther= "";
+
+
+                filtroAmtGranted= "";
+                filtroAmtPaid= "";
+                
+
+                filtroFrom= "";
+                filtroTo= "";
+                filtroLimit= "";
+                filtroPage= "";
+                
                 getAids();
+                showFilterForm = !showFilterForm;
                 goto("/dana-grants-subsidies-stats");
             }}>Limpiar filtros</Button>
             </div>
