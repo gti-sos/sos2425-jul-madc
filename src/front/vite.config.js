@@ -7,7 +7,7 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
 		host: '0.0.0.0', // Requerido por Render
-		port: Number(process.env.PORT) || 3000, // Usa el puerto dinámico asignado por Render
+		port: Number(process.env.PORT) || 5173, // Usa el puerto dinámico asignado por Render
 		fs: {
 			allow: [
 				path.resolve(__dirname, '.'),

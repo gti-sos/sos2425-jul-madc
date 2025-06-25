@@ -44,70 +44,80 @@
 
     // Nuevo objeto para crear/editar subvenciones
     let newAid = {
+        grant_date: `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
         year: new Date().getFullYear(),
         month: new Date().getMonth() + 1,
-        grant_date: `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`,
+
+        region_name: "Comunidad Valenciana",
+        prov_name: "",
+        mun_name: "",
+
+        grantor: "",
+
         benef_id: "",
         benef_name: "",
         benef_type: "",
-        purpose: "",
-        grantor: "",
-        grant_type: "",
-        amt_granted: 0,
-        amt_paid: 0,
-        reimbursed: 0,
-        refunded: 0,
-        region_name: "Comunidad Valenciana",
-        sec_cod: "",
-        sec_descr: "",
+
         aid_type: "",
-        reg_base: "",
-        fund_local: 0,
-        fund_regional: 0,
-        fund_state: 0,
-        fund_eu: 0,
-        fund_other: 0,
+        purpose: "",
+
         fund_type: "",
-        prov_name: "",
-        mun_name: ""
+        fund_eu: 0,
+        fund_state: 0,
+        fund_regional: 0,
+        fund_local: 0,
+        fund_other: 0,
+
+        amt_granted: 0,
+        amt_paid: 0    
     };
 
     // Filtros
+    let filtroGrantDate = "";
     let filtroYear = "";
     let filtroMonth = "";
-    let filtroGrantDate = "";
+
+    let filtroRegionName = "";
+    let filtroProvName = "";
+    let filtroMunName = "";
+
+    let filtroGrantor = "";
+    
     let filtroBenefId = "";
     let filtroBenefName = "";
     let filtroBenefType = "";
+
+    let filtroAidType = ""
     let filtroPurpose = "";
-    let filtroGrantor = "";
-    let filtroGrantType = "";
+
+    let filtroFundType = "";
+    let filtroFundEu = "";
+    let filtroFundState = "";
+    let filtroFundRegional = "";
+    let filtroFundLocal = "";
+    let filtroFundOther = "";
+    
     let filtroAmtGranted = "";
     let filtroAmtPaid = "";
-    let filtroReimbursed = "";
-    let filtroRefunded = "";
-    let filtroRegionName = "";
-    let filtroSecCod = "";
-    let filtroSecDescr = "";
-    let filtroAidType = ""
-    let filtroRegBase = "";
-    let filtroFundLocal = "";
-    let filtroFundRegional = "";
-    let filtroFundState = "";
-    let filtroFundEu = "";
-    let filtroFundOther = "";
-    let filtroFundType = "";
-    let filtroProvName = "";
-    let filtroMunName = "";
 
     let filtroFrom = "";
     let filtroTo = "";
     let filtroLimit = "";
     let filtroPage = "";
+
+    let showFecha = false;
+    let showUbicacion = false;
+    let showBeneficiario = false;
+    let showConcedente = false;
+    let showCaracter = false;
+    let showFinanciacion = false;
+    let showEstado = false;
+    let showPaginacion = false;
     
 
 
     if (dev) API = DEVEL_HOST + API;
+    console.log(dev);
 
     async function initializeData(){
         try {
@@ -124,33 +134,36 @@
     async function getAids() {
         let url = API;
         const params = [];
-
+        
+        if (filtroGrantDate)    params.push(`grant_date=${encodeURIComponent(filtroGrantDate)}`);
         if (filtroYear)         params.push(`year=${filtroYear}`);
         if (filtroMonth)        params.push(`month=${filtroMonth}`);
-        if (filtroGrantDate)    params.push(`grant_date=${encodeURIComponent(filtroGrantDate)}`);
+
+        if (filtroRegionName)     params.push(`region_name=${encodeURIComponent(filtroRegionName)}`);
+        if (filtroProvName)     params.push(`prov_name=${encodeURIComponent(filtroProvName)}`);
+        if (filtroMunName)      params.push(`mun_name=${encodeURIComponent(filtroMunName)}`);
+
+        if (filtroGrantor)      params.push(`grantor=${encodeURIComponent(filtroGrantor)}`);
+
+
         if (filtroBenefId)      params.push(`benef_id=${encodeURIComponent(filtroBenefId)}`);
         if (filtroBenefName)    params.push(`benef_name=${encodeURIComponent(filtroBenefName)}`);
         if (filtroBenefType)    params.push(`benef_type=${encodeURIComponent(filtroBenefType)}`);
+
+        if (filtroAidType)      params.push(`aid_type=${encodeURIComponent(filtroAidType)}`);
         if (filtroPurpose)      params.push(`purpose=${encodeURIComponent(filtroPurpose)}`);
-        if (filtroGrantor)      params.push(`grantor=${encodeURIComponent(filtroGrantor)}`);
-        if (filtroGrantType)    params.push(`grant_type=${encodeURIComponent(filtroGrantType)}`);
+
+        if (filtroFundType)     params.push(`fund_type=${encodeURIComponent(filtroFundType)}`);
+        if (filtroFundEu)       params.push(`fund_eu=${filtroFundEu}`);
+        if (filtroFundState)    params.push(`fund_state=${filtroFundState}`);
+        if (filtroFundRegional) params.push(`fund_regional=${filtroFundRegional}`);
+        if (filtroFundLocal)    params.push(`fund_local=${filtroFundLocal}`);
+        if (filtroFundOther)    params.push(`fund_other=${filtroFundOther}`);
+
+
         if (filtroAmtGranted)   params.push(`amt_granted=${filtroAmtGranted}`);
         if (filtroAmtPaid)      params.push(`amt_paid=${filtroAmtPaid}`);
-        if (filtroReimbursed)   params.push(`reimbursed=${filtroReimbursed}`);
-        if (filtroRefunded)     params.push(`refunded=${filtroRefunded}`);
-        if (filtroRegionName)   params.push(`region_name=${encodeURIComponent(filtroRegionName)}`);
-        if (filtroSecCod)       params.push(`sec_cod=${filtroSecCod}`);
-        if (filtroSecDescr)     params.push(`sec_descr=${encodeURIComponent(filtroSecDescr)}`);
-        if (filtroAidType)      params.push(`aid_type=${encodeURIComponent(filtroAidType)}`);
-        if (filtroRegBase)      params.push(`reg_base=${encodeURIComponent(filtroRegBase)}`);
-        if (filtroFundLocal)    params.push(`fund_local=${filtroFundLocal}`);
-        if (filtroFundRegional) params.push(`fund_regional=${filtroFundRegional}`);
-        if (filtroFundState)    params.push(`fund_state=${filtroFundState}`);
-        if (filtroFundEu)       params.push(`fund_eu=${filtroFundEu}`);
-        if (filtroFundOther)    params.push(`fund_other=${filtroFundOther}`);
-        if (filtroFundType)     params.push(`fund_type=${encodeURIComponent(filtroFundType)}`);
-        if (filtroProvName)     params.push(`prov_name=${encodeURIComponent(filtroProvName)}`);
-        if (filtroMunName)      params.push(`mun_name=${encodeURIComponent(filtroMunName)}`);
+        
 
         if (filtroFrom)         params.push(`from=${filtroFrom}`);
         if (filtroTo)           params.push(`to=${filtroTo}`);
@@ -323,32 +336,32 @@
     // Resetear el formulario de nueva subvención
     function resetNewAid() {
         newAid = {
+            grant_date: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
             year: new Date().getFullYear(),
             month: new Date().getMonth() + 1,
-            grant_date: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()}`,
+
+            region_name: "Comunidad Valenciana",
+            prov_name: "",
+            mun_name: "",
+
+            grantor: "",
+            
             benef_id: "",
             benef_name: "",
             benef_type: "",
+
+            aid_type: "",
             purpose: "",
-            grantor: "",
-            grant_type: "",
+
+            fund_type: "",
+            fund_eu: 0,
+            fund_state: 0,
+            fund_regional: 0,
+            fund_local: 0,
+            fund_other: 0,
+
             amt_granted: 0,
             amt_paid: 0,
-            reimbursed: 0,
-            refunded: 0,
-            region_name: "Comunidad Valenciana",
-            sec_cod: "",
-            sec_descr: "",
-            aid_type: "",
-            reg_base: "",
-            fund_local: 0,
-            fund_regional: 0,
-            fund_state: 0,
-            fund_eu: 0,
-            fund_other: 0,
-            fund_type: "",
-            prov_name: "",
-            mun_name: ""
         };
     }
 
@@ -362,18 +375,19 @@
         }, 3000);
     }
 
-    onMount(()=>{
-        getAids();
+    onMount(async ()=>{
+        await getAids();
     });
 </script>
 
 <style>
     :global(body) {
         background-color: #f8f9fa;
+        font-size: 0.8rem;
     }
     
     .table-container {
-        padding: 0 13.3333dvw;
+        padding: 0 5dvw;
     }
     
     .table-header {
@@ -381,7 +395,7 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
-        padding: 0 13.3333dvw;
+        padding: 0 5dvw;
         justify-content: end;
     }
 
@@ -389,17 +403,30 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 13.3333dvw;
+        padding: 0 5dvw;
         justify-content: end;
         margin-top: 1rem;
+    }
+
+    td{
+        padding: 2rem 0.5rem;
+        text-align: center;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+    }
+
+    th{
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        text-align: center;
     }
     
     .form-section {
         margin-bottom: 2rem;
-        padding: 0 13.3333dvw;
+        padding: 0 5dvw;
         display:flex;
         flex-direction: column;
-        align-items: end;
+        align-items: center;
     }
     .action-column {
         white-space: nowrap;
@@ -430,18 +457,36 @@
 
     <!-- Sección para crear nuevo recurso -->
     <div class="form-section">
-        <Button color="primary" style="align-self: end;" on:click={() => showCreateForm = !showCreateForm} class="mb-3">
+        <div style="margin: 1rem;">
+            <Button color="secondary" style="font-size: 0.9rem;" on:click={() => goto('/dana-grants-subsidies-stats/graph1')}>
+                <i class="bi bi-bar-chart-fill me-2"></i>Gráfico Barras
+            </Button>
+            <Button color="secondary" style="font-size: 0.9rem;" on:click={() => goto('/dana-grants-subsidies-stats/graph2')}>
+                <i class="bi bi-pie-chart-fill me-2"></i>Gráfico Donught
+            </Button>
+        </div>
+        <div>
+            <Button color="primary" style="align-self: end; font-size: 0.9rem;" on:click={() => showCreateForm = !showCreateForm} class="mb-3">
             <i class="bi bi-plus"></i> Crear nueva subvención
-        </Button>
+            </Button>
+        </div>
+        
 
-        <Collapse style="align-self: normal;" center isOpen={showCreateForm}>
+        <Collapse style="align-self: normal; padding: 0 12rem;" center isOpen={showCreateForm}>
             <Card>
                 <CardHeader>
-                    <h4>Crear nueva subvención</h4>
+                    <h4 style="text-align: center;">Nueva subvención</h4>
                 </CardHeader>
-                <CardBody>
+                <CardBody style="padding: 0 5rem;">
                     <Form on:submit={createAid}>
-                        <Row>
+                        <h5 style="margin-top: 1rem;">Fecha</h5>
+                        <Row style="margin-top: 1rem; margin-bottom: 1rem;">
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="grant_date">Fecha de concesión</Label>
+                                    <Input type="text" name="grant_date" id="grant_date" bind:value={newAid.grant_date}/>
+                                </FormGroup>
+                            </Col>
                             <Col md={4}>
                                 <FormGroup>
                                     <Label for="year">Año</Label>
@@ -454,191 +499,14 @@
                                     <Input type="number" name="month" id="month" min="1" max="12" bind:value={newAid.month} required />
                                 </FormGroup>
                             </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="grant_date">Fecha de concesión</Label>
-                                    <Input type="text" name="grant_date" id="grant_date" bind:value={newAid.grant_date}/>
-                                </FormGroup>
-                            </Col>
                         </Row>
                         
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="benef_id">ID Beneficiario</Label>
-                                    <Input type="text" name="benef_id" id="benef_id" bind:value={newAid.benef_id} required />
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="benef_name">Nombre Beneficiario</Label>
-                                    <Input type="text" name="benef_name" id="benef_name" bind:value={newAid.benef_name} />
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="benef_type">Tipo Beneficiario</Label>
-                                    <datalist id="benef_type_list">
-                                        <option value="PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA">PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA</option>
-                                        <option value="PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA">PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA</option>
-                                        <option value="PERSONAS FÍSICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA">PERSONAS FÍSICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA</option>
-
-                                    </datalist>
-                                    <Input type="text" name="benef_type" id="benef_type" list="benef_type_list" placeholder="A12345678" bind:value={newAid.benef_type}>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="purpose">Propósito</Label>
-                                    <Input type="text" name="purpose" id="purpose" bind:value={newAid.purpose}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="grantor">Concedente</Label>
-                                    <Input type="text" name="grantor" id="grantor" bind:value={newAid.grantor}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="grant_type">Tipo de subvencion</Label>
-                                    <datalist id="grant_type_list">
-                                        <option value="Concurrencia">Concurrencia</option>
-                                        <option value="Directa">Directa</option>
-                                    </datalist>    
-                                        
-                                    <Input type="text" name="grant_type" id="grant_type" list="grant_type_list" bind:value={newAid.grant_type}>
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="amt_granted">Importe concedido</Label>
-                                    <Input type="number" name="amt_granted" id="amt_granted" min="0" bind:value={newAid.amt_granted}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="amt_paid">Importe pagado</Label>
-                                    <Input type="number" name="amt_paid" id="amt_paid" min="0" bind:value={newAid.amt_paid}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="reimbursed">Reembolsado</Label>
-                                    <Input type="number" name="reimbursed" id="reimbursed" min="0" bind:value={newAid.reimbursed}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="refunded">Reintegrado</Label>
-                                    <Input type="number" name="refunded" id="refunded" min="0" bind:value={newAid.refunded}/>
-                                </FormGroup>
-                            </Col>
+                        <h5>Ubicación</h5>
+                        <Row style="margin-bottom: 1rem;">
                             <Col md={4}>
                                 <FormGroup>
                                     <Label for="region_name">Región</Label>
                                     <Input type="text" name="region_name" id="region_name" bind:value={newAid.region_name}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="sec_cod">Código sector</Label>
-                                    <Input type="text" name="sec_cod" id="sec_cod" bind:value={newAid.sec_cod}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="sec_name">Sector</Label>
-                                    <Input type="text" name="sec_name" id="sec_name" bind:value={newAid.sec_name}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="aid_type">Tipo de ayuda</Label>
-                                    <datalist id="aid_type_list">
-                                        <option value="SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN">SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN</option>
-                                    </datalist>
-                                    
-                                    <Input type="text" name="aid_type" id="aid_type" list="aid_type_list" bind:value={newAid.aid_type}>
-                                        
-                                    </Input>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="reg_base">Base reguladora</Label>
-                                    <Input type="text" name="reg_base" id="reg_base" bind:value={newAid.reg_base}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_local">Subv. Local</Label>
-                                    <Input type="number" name="fund_local" id="fund_local" min="0" bind:value={newAid.fund_local}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_regional">Subv. Regional</Label>
-                                    <Input type="number" name="fund_regional" id="fund_regional" min="0" bind:value={newAid.fund_regional}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_state">Subv. Estatal</Label>
-                                    <Input type="number" name="fund_state" id="fund_state" min="0" bind:value={newAid.fund_state}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_eu">Subv. Europea</Label>
-                                    <Input type="number" name="fund_eu" id="fund_eu" min="0" bind:value={newAid.fund_eu}/>
-                                </FormGroup>
-                            </Col>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_other">Subv. Otros</Label>
-                                    <Input type="number" name="fund_other" id="fund_other" min="0" bind:value={newAid.fund_other}/>
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                        
-                        <Row>
-                            <Col md={4}>
-                                <FormGroup>
-                                    <Label for="fund_type">Tipo Financiación</Label>
-                                    <datalist id="fund_type_list">
-                                        <option value="Autonómica">Autonómica</option>
-                                        <option value="Estatal">Estatal</option>
-                                        <option value="Europea">Europea</option>
-                                        <option value="Autonómica/Estatal">Autonómica/Estatal</option>
-                                        <option value="Autonómica/Europea">Autonómica/Europea</option>
-                                        <option value="Autonómica/Europea">Autonómica/Europea</option>
-                                    </datalist>
-                                    <Input type="text" name="fund_type" id="fund_type" list="fund_type_list" bind:value={newAid.fund_type}>
-                                        
-                                    </Input>
                                 </FormGroup>
                             </Col>
                             <Col md={4}>
@@ -660,7 +528,135 @@
                             </Col>
                         </Row>
                         
-                        <div class="d-flex justify-content-end mt-3">
+                        <h5>Concedente</h5>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="grantor">Institución Concedente</Label>
+                                    <Input type="text" name="grantor" id="grantor" bind:value={newAid.grantor}/>
+                                </FormGroup>
+                            </Col>                          
+                        </Row>
+
+                        <h5>Beneficiario</h5>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="benef_id">ID Beneficiario</Label>
+                                    <Input type="text" name="benef_id" id="benef_id" bind:value={newAid.benef_id} required />
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="benef_name">Nombre Beneficiario</Label>
+                                    <Input type="text" name="benef_name" id="benef_name" bind:value={newAid.benef_name} />
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="benef_type">Tipo Beneficiario</Label>
+                                    <datalist id="benef_type_list">
+                                        <option value="PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA">PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA</option>
+                                        <option value="PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA">PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA</option>
+                                        <option value="PERSONAS FÍSICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA">PERSONAS FÍSICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA</option>
+
+                                    </datalist>
+                                    <Input type="text" name="benef_type" id="benef_type" list="benef_type_list" placeholder="A12345678" bind:value={newAid.benef_type}>
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                            
+                        <h5>Carácter</h5>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="aid_type">Tipo de ayuda</Label>
+                                    <datalist id="aid_type_list">
+                                        <option value="SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN">SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN</option>
+                                    </datalist>
+                                    
+                                    <Input type="text" name="aid_type" id="aid_type" list="aid_type_list" bind:value={newAid.aid_type}>
+                                        
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="purpose">Propósito</Label>
+                                    <Input type="text" name="purpose" id="purpose" bind:value={newAid.purpose}/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
+                        <h5>Financiación</h5>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_type">Tipo Financiación</Label>
+                                    <datalist id="fund_type_list">
+                                        <option value="Autonómica">Autonómica</option>
+                                        <option value="Estatal">Estatal</option>
+                                        <option value="Europea">Europea</option>
+                                        <option value="Autonómica/Estatal">Autonómica/Estatal</option>
+                                        <option value="Autonómica/Europea">Autonómica/Europea</option>
+                                        <option value="Autonómica/Estatal/Europea">Autonómica/Estatal/Europea</option>
+                                    </datalist>
+                                    <Input type="text" name="fund_type" id="fund_type" list="fund_type_list" bind:value={newAid.fund_type}>
+                                        
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_eu">Financiación Europea</Label>
+                                    <Input type="number" name="fund_eu" id="fund_eu" min="0" bind:value={newAid.fund_eu}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_state">Financiación Estatal</Label>
+                                    <Input type="number" name="fund_state" id="fund_state" min="0" bind:value={newAid.fund_state}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_regional">Financiación Autonómica</Label>
+                                    <Input type="number" name="fund_regional" id="fund_regional" min="0" bind:value={newAid.fund_regional}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_local">Financiación Local</Label>
+                                    <Input type="number" name="fund_local" id="fund_local" min="0" bind:value={newAid.fund_local}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="fund_other">Financiación Otros</Label>
+                                    <Input type="number" name="fund_other" id="fund_other" min="0" bind:value={newAid.fund_other}/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
+                        <h5>Estado ayuda</h5>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="amt_granted">Importe concedido</Label>
+                                    <Input type="number" name="amt_granted" id="amt_granted" min="0" bind:value={newAid.amt_granted}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup>
+                                    <Label for="amt_paid">Importe pagado</Label>
+                                    <Input type="number" name="amt_paid" id="amt_paid" min="0" bind:value={newAid.amt_paid}/>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                            
+                    
+                        <div class="d-flex justify-content-end mt-3" style="margin-bottom: 1rem;">
                             <Button color="secondary" class="me-2" on:click={() => showCreateForm = false}>Cancelar</Button>
                             <Button color="primary" type="submit">Guardar</Button>
                         </div>
@@ -673,240 +669,322 @@
     <!-- Tabla de subvenciones con filtros -->
     <div class="table-header">
         <div>
-            <Button color="primary" style="align-self: end;" on:click={goto('/dana-grants-subsidies-stats/graph1')}>
-                <i class="bi bi-bar-chart-fill me-2"></i>Gráfico Barras
-            </Button>
-            <Button color="primary" style="align-self: end;" on:click={goto('/dana-grants-subsidies-stats/graph2')}>
-                <i class="bi bi-pie-chart-fill me-2"></i>Gráfico Donught
-            </Button>
-            <Button color="outline-primary" id="filtros" on:click={() => showFilterForm = !showFilterForm}>
+            <Button color="outline-primary" id="filtros" style="font-size: 0.9rem;" on:click={() => showFilterForm = !showFilterForm}>
                 <i class="bi bi-funnel"></i> Filtros
             </Button>
         </div>
     </div>
 
-    <!-- Sección de filtros -->
-    <Collapse style="padding: 0 13.3333dvw;" isOpen={showFilterForm}>
+    <Collapse style="width: calc(100% - 2*5dvw); margin: 0 5dvw 0 auto;" isOpen={showFilterForm}>
         <Card class="mb-3">
             <CardHeader>
                 <h4>Filtros</h4>
             </CardHeader>
             <CardBody>
                 <Form on:submit={getAids}>
+
+                <!-- Fecha -->
+                <Card class="mb-2">
+                    <CardHeader on:click={() => showFecha = !showFecha} style="cursor: pointer;">
+                        <h5>Fecha
+                            <span style="float: right;">
+                                <i class="bi {showFecha ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                            </span>
+                        </h5>
+                    </CardHeader>
+                    <Collapse isOpen={showFecha}>
+                        <CardBody>
+                        <Row>
+                            <Col md={4}>
+                            <FormGroup>
+                                <Label for="filtroGrantDate">Fecha de concesión</Label>
+                                <Input type="text" id="filtroGrantDate" bind:value={filtroGrantDate} />
+                            </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                            <FormGroup>
+                                <Label for="filtroYear">Año</Label>
+                                <Input type="number" id="filtroYear" bind:value={filtroYear} />
+                            </FormGroup>
+                            </Col>
+                            <Col md={4}>
+                            <FormGroup>
+                                <Label for="filtroMonth">Mes</Label>
+                                <Input type="number" id="filtroMonth" min="1" max="12" bind:value={filtroMonth} />
+                            </FormGroup>
+                            </Col>
+                            
+                        </Row>
+                        </CardBody>
+                    </Collapse>
+                </Card>
+
+                <!-- Ubicación -->
+                <Card class="mb-2">
+                    <CardHeader on:click={() => showUbicacion = !showUbicacion} style="cursor: pointer;">
+                        <h5>Ubicación
+                            <span style="float: right;">
+                                <i class="bi {showUbicacion ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                            </span>
+                        </h5>
+                    </CardHeader>
+                <Collapse isOpen={showUbicacion}>
+                    <CardBody>
                     <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroYear">Año</Label>
-                            <Input type="number" name="filtroYear" id="filtroYear" bind:value={filtroYear} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroMonth">Mes</Label>
-                            <Input type="number" name="filtroMonth" id="filtroMonth" min="1" max="12" bind:value={filtroMonth} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroGrantDate">Fecha de concesión</Label>
-                            <Input type="text" name="filtroGrantDate" id="filtroGrantDate" bind:value={filtroGrantDate} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroBenefId">ID Beneficiario</Label>
-                            <Input type="text" name="filtroBenefId" id="filtroBenefId" bind:value={filtroBenefId} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroBenefName">Nombre Beneficiario</Label>
-                            <Input type="text" name="filtroBenefName" id="filtroBenefName" bind:value={filtroBenefName} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroBenefType">Tipo Beneficiario</Label>
-                            <Input type="text" name="filtroBenefType" id="filtroBenefType" bind:value={filtroBenefType} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroPurpose">Propósito</Label>
-                            <Input type="text" name="filtroPurpose" id="filtroPurpose" bind:value={filtroPurpose} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroGrantor">Concedente</Label>
-                            <Input type="text" name="filtroGrantor" id="filtroGrantor" bind:value={filtroGrantor} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroGrantType">Tipo subvencion</Label>
-                            <Input type="text" name="filtroGrantType" id="filtroGrantType" bind:value={filtroGrantType} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroAmtGranted">Importe concedido</Label>
-                            <Input type="number" name="filtroAmtGranted" id="filtroAmtGranted" bind:value={filtroAmtGranted} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroAmtPaid">Importe pagado</Label>
-                            <Input type="number" name="filtroAmtPaid" id="filtroAmtPaid" bind:value={filtroAmtPaid} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroReimbursed">Reembolsado</Label>
-                            <Input type="number" name="filtroReimbursed" id="filtroReimbursed" bind:value={filtroReimbursed} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroRefunded">Reintegrado</Label>
-                            <Input type="number" name="filtroRefunded" id="filtroRefunded" bind:value={filtroRefunded} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
+                        <Col md={4}>
+                        <FormGroup>
                             <Label for="filtroRegionName">Región</Label>
-                            <Input type="text" name="filtroRegionName" id="filtroRegionName" bind:value={filtroRegionName} />
-                          </FormGroup>
+                            <Input type="text" id="filtroRegionName" bind:value={filtroRegionName} />
+                        </FormGroup>
                         </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroSecCod">Código sector</Label>
-                            <Input type="text" name="filtroSecCod" id="filtroSecCod" bind:value={filtroSecCod} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroSecDescr">Sector</Label>
-                            <Input type="text" name="filtroSecDescr" id="filtroSecDescr" bind:value={filtroSecDescr} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroAidType">Tipo de ayuda</Label>
-                            <Input type="text" name="filtroAidType" id="filtroAidType" bind:value={filtroAidType} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroRegBase">Base Reguladora</Label>
-                            <Input type="text" name="filtroRegBase" id="filtroRegBase" bind:value={filtroRegBase} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundLocal">Subv. Local</Label>
-                            <Input type="number" name="filtroFundLocal" id="filtroFundLocal" bind:value={filtroFundLocal} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundRegional">Subv. Regional</Label>
-                            <Input type="number" name="filtroFundRegional" id="filtroFundRegional" bind:value={filtroFundRegional} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundState">Subv. Estatal</Label>
-                            <Input type="number" name="filtroFundState" id="filtroFundState" bind:value={filtroFundState} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundEu">Subv. Europea</Label>
-                            <Input type="number" name="filtroFundEu" id="filtroFundEu" bind:value={filtroFundEu} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundOther">Subv. Otros</Label>
-                            <Input type="number" name="filtroFundOther" id="filtroFundOther" bind:value={filtroFundOther} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroFundType">Tipo de Financiación</Label>
-                            <Input type="text" name="filtroFundType" id="filtroFundType" bind:value={filtroFundType} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
+                        <Col md={4}>
+                        <FormGroup>
                             <Label for="filtroProvName">Provincia</Label>
-                            <Input type="text" name="filtroProvName" id="filtroProvName" bind:value={filtroProvName} />
-                          </FormGroup>
+                            <Input type="text" id="filtroProvName" bind:value={filtroProvName} />
+                        </FormGroup>
                         </Col>
-                        <Col md={3}>
-                          <FormGroup>
+                        <Col md={4}>
+                        <FormGroup>
                             <Label for="filtroMunName">Municipio</Label>
-                            <Input type="text" name="filtroMunName" id="filtroMunName" bind:value={filtroMunName} />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md={3}>
-                          <FormGroup>
-                            <Label for="filtroLimit">Nº recursos por página</Label>
-                            <Input type="number" name="filtroLimit" id="filtroLimit" bind:value={filtroLimit} />
-                          </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                            <FormGroup>
-                                <Label for="filtroPage">Página</Label>
-                                <Input type="number" name="filtroPage" id="filtroPage" bind:value={filtroPage} />
-                            </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                            <FormGroup>
-                              <Label for="filtroFrom">Desde (Año)</Label>
-                              <Input type="number" name="filtroFrom" id="filtroFrom" bind:value={filtroFrom} />
-                            </FormGroup>
-                        </Col>
-                        <Col md={3}>
-                            <FormGroup>
-                              <Label for="filtroTo">Hasta (Año)</Label>
-                              <Input type="number" name="filtroTo" id="filtroTo" bind:value={filtroTo} />
-                            </FormGroup>
+                            <Input type="text" id="filtroMunName" bind:value={filtroMunName} />
+                        </FormGroup>
                         </Col>
                     </Row>
-                    <div class="d-flex justify-content-end mt-3">
-                        <Button color="primary" type="submit">Aplicar filtros</Button>
-                        <Button color="secondary" class="ms-2" on:click={() => {
-                            filtroYear = "";
-                            filtroMonth = "";
-                            filtroProvName = "";
-                            filtroMunName = "";
-                            filtroFrom = "";
-                            filtroTo = "";
-                            filtroLimit = "";
-                            filtroPage = "";
-                            getAids();
-                            goto("/dana-grants-subsidies-stats");
-                            
-                        }}>Limpiar filtros</Button>
-                    </div>
-                </Form>
-            </CardBody>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+                <!-- Concedente -->
+                <Card class="mb-2">
+                <CardHeader on:click={() => showConcedente = !showConcedente} style="cursor: pointer;">
+                   <h5>Concedente
+                        <span style="float: right;">
+                            <i class="bi {showConcedente ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showConcedente}>
+                    <CardBody>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroGrantor">Institución Concedente</Label>
+                            <Input type="text" id="filtroGrantor" bind:value={filtroGrantor} />
+                        </FormGroup>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+                <!-- Beneficiario -->
+                <Card class="mb-2">
+                <CardHeader on:click={() => showBeneficiario = !showBeneficiario} style="cursor: pointer;">
+                    <h5>Beneficiario
+                        <span style="float: right;">
+                            <i class="bi {showBeneficiario ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showBeneficiario}>
+                    <CardBody>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroBenefId">ID Beneficiario</Label>
+                            <Input type="text" id="filtroBenefId" bind:value={filtroBenefId} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroBenefName">Nombre Beneficiario</Label>
+                            <Input type="text" id="filtroBenefName" bind:value={filtroBenefName} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroBenefType">Tipo Beneficiario</Label>
+                            <Input type="text" id="filtroBenefType" bind:value={filtroBenefType} />
+                        </FormGroup>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+                <!-- Carácter -->
+                <Card class="mb-2">
+                <CardHeader on:click={() => showCaracter = !showCaracter} style="cursor: pointer;">
+                    <h5>Carácter
+                        <span style="float: right;">
+                            <i class="bi {showCaracter ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showCaracter}>
+                    <CardBody>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroAidType">Tipo de ayuda</Label>
+                            <Input type="text" id="filtroAidType" bind:value={filtroAidType} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroPurpose">Propósito</Label>
+                            <Input type="text" id="filtroPurpose" bind:value={filtroPurpose} />
+                        </FormGroup>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+                <!-- Financiación -->
+                <Card class="mb-2">
+                <CardHeader on:click={() => showFinanciacion = !showFinanciacion} style="cursor: pointer;">
+                    <h5>Financiación
+                        <span style="float: right;">
+                            <i class="bi {showFinanciacion ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showFinanciacion}>
+                    <CardBody>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundType">Tipo Financiación</Label>
+                            <Input type="text" id="filtroFundType" bind:value={filtroFundType} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundEu">Financiación Europea</Label>
+                            <Input type="number" id="filtroFundEu" bind:value={filtroFundEu} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundState">Financiación Estatal</Label>
+                            <Input type="number" id="filtroFundState" bind:value={filtroFundState} />
+                        </FormGroup>
+                        </Col>                    
+                    </Row>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundRegional">Financiación Autonómica</Label>
+                            <Input type="number" id="filtroFundRegional" bind:value={filtroFundRegional} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundLocal">Financiación Local</Label>
+                            <Input type="number" id="filtroFundLocal" bind:value={filtroFundLocal} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroFundOther">Financiación Otros</Label>
+                            <Input type="number" id="filtroFundOther" bind:value={filtroFundOther} />
+                        </FormGroup>
+                        </Col>
+                        
+                    </Row>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+                <!-- Estado ayuda -->
+                <Card class="mb-2">
+                <CardHeader on:click={() => showEstado = !showEstado} style="cursor: pointer;">
+                    <h5>Estado
+                        <span style="float: right;">
+                            <i class="bi {showEstado ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showEstado}>
+                    <CardBody>
+                    <Row>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroAmtGranted">Importe concedido</Label>
+                            <Input type="number" id="filtroAmtGranted" bind:value={filtroAmtGranted} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                        <FormGroup>
+                            <Label for="filtroAmtPaid">Importe pagado</Label>
+                            <Input type="number" id="filtroAmtPaid" bind:value={filtroAmtPaid} />
+                        </FormGroup>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                </Collapse>
+                </Card>
+
+            <!-- Paginación -->
+            <Card class="mb-2">
+                <CardHeader on:click={() => showPaginacion = !showPaginacion} style="cursor: pointer;">
+                    <h5>Paginación
+                        <span style="float: right;">
+                            <i class="bi {showPaginacion ? 'bi-chevron-down' : 'bi-chevron-right'}"></i>
+                        </span>
+                    </h5>
+                </CardHeader>
+                <Collapse isOpen={showPaginacion}>
+                    <CardBody>
+                    <Row>
+                        <Col md={3}>
+                        <FormGroup>
+                            <Label for="filtroLimit">Nº recursos por página</Label>
+                            <Input type="number" id="filtroLimit" bind:value={filtroLimit} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={3}>
+                        <FormGroup>
+                            <Label for="filtroPage">Página</Label>
+                            <Input type="number" id="filtroPage" bind:value={filtroPage} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={3}>
+                        <FormGroup>
+                            <Label for="filtroFrom">Desde (Año)</Label>
+                            <Input type="number" id="filtroFrom" bind:value={filtroFrom} />
+                        </FormGroup>
+                        </Col>
+                        <Col md={3}>
+                        <FormGroup>
+                            <Label for="filtroTo">Hasta (Año)</Label>
+                            <Input type="number" id="filtroTo" bind:value={filtroTo} />
+                        </FormGroup>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                </Collapse>
+            </Card>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-end mt-3">
+            <Button color="primary" type="submit">Aplicar filtros</Button>
+            <Button color="secondary" class="ms-2" on:click={() => {
+                filtroYear = "";
+                filtroMonth = "";
+                filtroProvName = "";
+                filtroMunName = "";
+                filtroFrom = "";
+                filtroTo = "";
+                filtroLimit = "";
+                filtroPage = "";
+                getAids();
+                goto("/dana-grants-subsidies-stats");
+            }}>Limpiar filtros</Button>
+            </div>
+        </Form>
+        </CardBody>
         </Card>
     </Collapse>
 
@@ -915,36 +993,39 @@
         <Table striped responsive >
             <thead>
                 <tr>
-                    <th>Año</th>
-                    <th>Mes</th>
-                    <th>Fecha Conc.</th>
-                    <th>Benef. ID</th>
-                    <th>Nombre Benef.</th>
-                    <th>Tipo Benef.</th>
-                    <th>Propósito</th>
-                    <th>Otorgante</th>
-                    <th>Imp. Conc.</th>
-                    <th>Imp. Pagado</th>
+                    <th>Fecha Concesión</th>
                     <th>Provincia</th>
-                    <th>Municipio</th>
+                    <th><strong>Municipio</strong></th>
+                    <th>Institución Otorgante</th>
+                    <th><strong>ID Beneficiario</strong></th>
+                    <th>Tipo Beneficiario</th>
+                    <th>Tipo Ayuda</th>
+                    <th>Propósito</th>
+                    <th>Financiación Europea</th>
+                    <th>Financiación Estatal</th>
+                    <th>Financiación Autonómica</th>
+                    <th>Importe Concedido</th>
+                    <th>Importe Pagado</th>                    
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {#each aids as aid}
                     <tr>
-                        <td>{aid.year}</td>
-                        <td>{aid.month}</td>
-                        <td>{aid.grant_date}</td>
-                        <td>{aid.benef_id}</td>
-                        <td>{aid.benef_name}</td>
-                        <td>{aid.benef_type?.toLowerCase()}</td>
-                        <td>{aid.purpose}</td>
-                        <td>{aid.grantor}</td>
-                        <td>{aid.amt_granted}€</td>
-                        <td>{aid.amt_paid}€</td>
+                        <td>{(aid.grant_date).split("/")[0].concat("/")}<strong>{(aid.grant_date).split("/")[1]}</strong>{"/"+(aid.grant_date).split("/")[2]}</td>
                         <td>{aid.prov_name}</td>
-                        <td>{aid.mun_name}</td>
+                        <td><strong>{aid.mun_name}</strong></td>
+                        <td>{aid.grantor}</td>
+                        <td><strong>{aid.benef_id}</strong></td>
+                        <td>{(aid.benef_type).charAt(0).concat((aid.benef_type).slice(1)?.toLowerCase())}</td>
+
+                        <td>{aid.aid_type}</td>
+                        <td>{aid.purpose}</td>
+                        <td>{aid.fund_eu} €</td>
+                        <td>{aid.fund_state} €</td>
+                        <td>{aid.fund_regional} €</td>
+                        <td>{aid.amt_granted} €</td>
+                        <td>{aid.amt_paid} €</td>
                         <td class="action-column">
                             <Button color="primary" size="sm" on:click={() => goto(`/dana-grants-subsidies-stats/editar/${aid.mun_name}/${aid.month}/${aid.benef_id}`)}>
                                 <i class="bi bi-pencil"></i> Editar
@@ -960,7 +1041,7 @@
     </div>
 
     <div class="table-footer">
-        <Button color="outline-danger" style="display:flex; justify-content:end;" class="ms-2" on:click={() => showDeleteAllModal = true}>
+        <Button color="outline-danger" style="display:flex; justify-content:end; font-size: 0.9rem;" class="ms-2" on:click={() => showDeleteAllModal = true}>
             <i class="bi bi-trash"></i> Eliminar todo
         </Button>
     </div>

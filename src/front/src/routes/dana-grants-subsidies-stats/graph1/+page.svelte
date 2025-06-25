@@ -2,6 +2,7 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 </svelte:head>
 
 <!-- svelte-ignore css_unused_selector -->
@@ -62,7 +63,7 @@
 <script>
 // @ts-nocheck
 
-    import { onMount } from "svelte";
+    import { onMount, tick} from "svelte";
     import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     
@@ -78,72 +79,50 @@
     // @ts-ignore
     let aids={};
 
-    function getAmt(month, prov_name){
-        if(aids[month]){
-            if(aids[month][prov_name]){
-                return aids[month][prov_name];
-            }else{
-                return 0;
-            }
-        }else{
-            return 0;
-        }
-    }
+    async function getData() {
+        try {
+            let res = await fetch(API);
+            let json = await res.json();
 
-    async function processGraphs(){
-        try{
-            // @ts-ignore
-            let data= await fetch(API);
-            let res= await data.json();
-            res.filter(obj=> obj.month!==null).forEach(obj =>{
+            for (const obj of json) {
                 if (!aids[obj.month]) {
                     aids[obj.month] = {};
                 }
 
                 if (aids[obj.month][obj.prov_name]) {
-                    aids[obj.month][obj.prov_name]= Math.round(aids[obj.month][obj.prov_name] +obj.amt_granted);
+                    aids[obj.month][obj.prov_name] += obj.amt_granted;
                 } else {
                     aids[obj.month][obj.prov_name] = obj.amt_granted;
                 }
-            });
-            console.log(aids);
-            // @ts-ignore
-            Highcharts.chart('container', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Evolución Subvenciones por Provincia'
-            },
+            }
+        } catch (err) {
+            showAlert("No se pudo conectar con el servidor", "danger");
+        }
+    }
+
+    async function renderChart() {
+        await tick(); // <- asegura que el DOM esté renderizado antes de dibujar el gráfico
+
+        Highcharts.chart('container', {
+            chart: { type: 'bar' },
+            title: { text: 'Evolución Subvenciones por Provincia' },
             xAxis: {
-                // @ts-ignore
                 categories: ["Octubre", "Noviembre", "Diciembre"],
-                title: {
-                    text: null
-                },
+                title: null,
                 gridLineWidth: 1,
                 lineWidth: 0
             },
             yAxis: {
                 min: 0,
-                title: {
-                    text: 'Monto total subvencionado (millones €)',
-                    align: 'high'
-                },
-                labels: {
-                    overflow: 'justify'
-                },
+                title: { text: 'Monto total subvencionado (millones €)', align: 'high' },
+                labels: { overflow: 'justify' },
                 gridLineWidth: 0
             },
-            tooltip: {
-                valueSuffix: ' €'
-            },
+            tooltip: { valueSuffix: ' €' },
             plotOptions: {
                 bar: {
                     borderRadius: '50%',
-                    dataLabels: {
-                        enabled: true
-                    },
+                    dataLabels: { enabled: true },
                     groupPadding: 0.1
                 }
             },
@@ -155,53 +134,54 @@
                 y: 80,
                 floating: true,
                 borderWidth: 1,
-                backgroundColor:
-                    // @ts-ignore
-                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
                 shadow: true
             },
-            credits: {
-                enabled: false
-            },
-            series: [{
-                name: 'Alicante',
-                data: [getAmt(10, "Alicante"), getAmt(11, "Alicante"), getAmt(12, "Alicante")]
-            }, {
-                name: 'Valencia',
-                data: [getAmt(10, "Valencia"), getAmt(11, "Valencia"), getAmt(12, "Valencia")]
-            }, {
-                name: 'Castellón',
-                data: [getAmt(10, "Castellón"), getAmt(11, "Castellón"), getAmt(12, "Castellón")]
-            }]
-        })
-        }catch(err){
-            showAlert("No se pudo conectar con el servidor", "danger");
-        }
+            credits: { enabled: false },
+            series: [
+                {
+                    name: 'Alicante',
+                    data: [getAmt(10, "Alicante"), getAmt(11, "Alicante"), getAmt(12, "Alicante")]
+                },
+                {
+                    name: 'Valencia',
+                    data: [getAmt(10, "Valencia"), getAmt(11, "Valencia"), getAmt(12, "Valencia")]
+                },
+                {
+                    name: 'Castellón',
+                    data: [getAmt(10, "Castellón"), getAmt(11, "Castellón"), getAmt(12, "Castellón")]
+                }
+            ]
+        });
     }
 
+    async function processGraphs() {
+        await getData();
+        await renderChart();
+    }
 
-onMount(()=>{
-    processGraphs();
-});
+    onMount(() => {
+        processGraphs();
+    });
 
-// @ts-ignore
-function showAlert(message, type) {
+    function getAmt(month, prov_name) {
+        return aids[month]?.[prov_name] ?? 0;
+    }
+
+    function showAlert(message, type) {
         alertMessage = message;
         alertType = type;
         alertVisible = true;
-        setTimeout(() => {
-            alertVisible = false;
-        }, 3000);
-}
+        setTimeout(() => alertVisible = false, 3000);
+    }
 </script>
 
 
 <figure class="highcharts-figure">
     <div id="container"></div>
     <p class="highcharts-description">
-        En este gráfico, se muestra la evolución mes a mes (a lo largo del último trimestre del 2024) 
-        del total subvencionado (en millones de euros) a las empresas e instituciones
+        En este gráfico, se muestra la evolución mensual (último trimestre del 2024) 
+        del total subvencionado a las empresas e instituciones
         de cada provincia de la Comunidad Valenciana afectadas por la DANA.
-        
     </p>
 </figure>

@@ -176,19 +176,37 @@
                     <Row>
                         <Col md={4}>
                             <FormGroup>
-                                <Label>ID Beneficiario</Label>
-                                <p>{currentAid.benef_id}</p>
+                                <Label for="edit-aid_type">Tipo de ayuda</Label>
+                                <datalist id="edit-aid_type_list">
+                                    <option value="SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN">SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN</option>
+                                </datalist>
+                                
+                                <Input type="text" name="edit-aid_type" id="edit-aid_type" list="edit-aid_type_list" bind:value={currentAid.aid_type}>
+                                    
+                                </Input>
                             </FormGroup>
                         </Col>
                         <Col md={4}>
                             <FormGroup>
-                                <Label for="edit-benef_name">Nombre Beneficiario</Label>
-                                <Input type="text" name="edit-benef_name" id="edit-benef_name" bind:value={currentAid.benef_name} />
+                                <Label for="edit-grantor">Institución Otorgante</Label>
+                                <Input type="text" name="edit-grantor" id="edit-grantor" bind:value={currentAid.grantor}/>
                             </FormGroup>
                         </Col>
                     </Row>
                     
                     <Row>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-benef_id">ID Beneficiario</Label>
+                                <Input type="text" name="edit-benef_id" id="edit-benef_id" bind:value={currentAid.benef_id}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-benef_name">Beneficiario</Label>
+                                <Input type="text" name="edit-benef_name" id="edit-benef_name" bind:value={currentAid.benef_name}/>
+                            </FormGroup>
+                        </Col>
                         <Col md={4}>
                             <FormGroup>
                                 <Label for="edit-benef_type">Tipo Beneficiario</Label>
@@ -201,154 +219,13 @@
                                 </Input>
                             </FormGroup>
                         </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-purpose">Propósito</Label>
-                                <Input type="text" name="edit-purpose" id="edit-purpose" bind:value={currentAid.purpose}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-grantor">Concedente</Label>
-                                <Input type="text" name="edit-grantor" id="edit-grantor" bind:value={currentAid.grantor}/>
-                            </FormGroup>
-                        </Col>
                     </Row>
                     
                     <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-grant_type">Tipo de subvencion</Label>
-                                <datalist id="edit-grant_type_list">
-                                    <option value="Concurrencia">Concurrencia</option>
-                                    <option value="Directa">Directa</option>
-                                </datalist>    
-                                    
-                                <Input type="text" name="edit-grant_type" id="edit-grant_type" list="edit-grant_type_list" bind:value={currentAid.grant_type}>
-                                </Input>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-amt_granted">Importe concedido</Label>
-                                <Input type="number" name="edit-amt_granted" id="edit-amt_granted" min="0" bind:value={currentAid.amt_granted}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-amt_paid">Importe pagado</Label>
-                                <Input type="number" name="edit-amt_paid" id="edit-amt_paid" min="0" bind:value={currentAid.amt_paid}/>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-reimbursed">Reembolsado</Label>
-                                <Input type="number" name="edit-reimbursed" id="edit-reimbursed" min="0" bind:value={currentAid.reimbursed}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-refunded">Reintegrado</Label>
-                                <Input type="number" name="edit-refunded" id="edit-refunded" min="0" bind:value={currentAid.refunded}/>
-                            </FormGroup>
-                        </Col>
                         <Col md={4}>
                             <FormGroup>
                                 <Label for="edit-region_name">Región</Label>
                                 <Input type="text" name="edit-region_name" id="edit-region_name" bind:value={currentAid.region_name}/>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-sec_cod">Código sector</Label>
-                                <Input type="text" name="edit-sec_cod" id="edit-sec_cod" bind:value={currentAid.sec_cod}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-sec_name">Sector</Label>
-                                <Input type="text" name="edit-sec_name" id="edit-sec_name" bind:value={currentAid.sec_name}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-aid_type">Tipo de ayuda</Label>
-                                <datalist id="edit-aid_type_list">
-                                    <option value="SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN">SUBVENCIÓN y ENTREGA DINERARIA SIN CONTRAPRESTACIÓN</option>
-                                </datalist>
-                                
-                                <Input type="text" name="edit-aid_type" id="edit-aid_type" list="edit-aid_type_list" bind:value={currentAid.aid_type}>
-                                    
-                                </Input>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-reg_base">Base reguladora</Label>
-                                <Input type="text" name="edit-reg_base" id="edit-reg_base" bind:value={currentAid.reg_base}/>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_local">Subv. Local</Label>
-                                <Input type="number" name="edit-fund_local" id="edit-fund_local" min="0" bind:value={currentAid.fund_local}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_regional">Subv. Regional</Label>
-                                <Input type="number" name="edit-fund_regional" id="edit-fund_regional" min="0" bind:value={currentAid.fund_regional}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_state">Subv. Estatal</Label>
-                                <Input type="number" name="edit-fund_state" id="edit-fund_state" min="0" bind:value={currentAid.fund_state}/>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_eu">Subv. Europea</Label>
-                                <Input type="number" name="edit-fund_eu" id="edit-fund_eu" min="0" bind:value={currentAid.fund_eu}/>
-                            </FormGroup>
-                        </Col>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_other">Subv. Otros</Label>
-                                <Input type="number" name="edit-fund_other" id="edit-fund_other" min="0" bind:value={currentAid.fund_other}/>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    
-                    <Row>
-                        <Col md={4}>
-                            <FormGroup>
-                                <Label for="edit-fund_type">Tipo Financiación</Label>
-                                <datalist id="edit-fund_type_list">
-                                    <option value="Autonómica">Autonómica</option>
-                                    <option value="Estatal">Estatal</option>
-                                    <option value="Europea">Europea</option>
-                                    <option value="Autonómica/Estatal">Autonómica/Estatal</option>
-                                    <option value="Autonómica/Europea">Autonómica/Europea</option>
-                                    <option value="Autonómica/Europea">Autonómica/Europea</option>
-                                </datalist>
-                                <Input type="text" name="edit-fund_type" id="edit-fund_type" list="edit-fund_type_list" bind:value={currentAid.fund_type}>
-                                    
-                                </Input>
                             </FormGroup>
                         </Col>
                         <Col md={4}>
@@ -366,6 +243,82 @@
                             <FormGroup>
                                 <Label>Municipio</Label>
                                 <p>{currentAid.mun_name}</p>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                    
+                    <Row>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-purpose">Propósito</Label>
+                                <Input type="text" name="edit-purpose" id="edit-purpose" bind:value={currentAid.purpose}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_type">Tipo Financiación</Label>
+                                <datalist id="edit-fund_type_list">
+                                    <option value="Autonómica">Autonómica</option>
+                                    <option value="Estatal">Estatal</option>
+                                    <option value="Europea">Europea</option>
+                                    <option value="Autonómica/Estatal">Autonómica/Estatal</option>
+                                    <option value="Autonómica/Europea">Autonómica/Europea</option>
+                                    <option value="Autonómica/Europea">Europea/Estatal</option>
+                                </datalist>
+                                <Input type="text" name="edit-fund_type" id="edit-fund_type" list="edit-fund_type_list" bind:value={currentAid.fund_type}>
+                                    
+                                </Input>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                
+                    <Row>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_eu">Financiación Europea</Label>
+                                <Input type="number" name="edit-fund_eu" id="edit-fund_eu" min="0" bind:value={currentAid.fund_eu}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_state">Financiación Estatal</Label>
+                                <Input type="number" name="edit-fund_state" id="edit-fund_state" min="0" bind:value={currentAid.fund_state}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_regional">Financiación Regional</Label>
+                                <Input type="number" name="edit-fund_regional" id="edit-fund_regional" min="0" bind:value={currentAid.fund_regional}/>
+                            </FormGroup>
+                        </Col>                        
+                    </Row>
+                    
+                    <Row>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_local">Financiación Local</Label>
+                                <Input type="number" name="edit-fund_local" id="edit-fund_local" min="0" bind:value={currentAid.fund_local}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-fund_other">Financiación Otros</Label>
+                                <Input type="number" name="edit-fund_other" id="edit-fund_other" min="0" bind:value={currentAid.fund_other}/>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                    
+                    <Row>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-amt_granted">Importe concedido</Label>
+                                <Input type="number" name="edit-amt_granted" id="edit-amt_granted" min="0" bind:value={currentAid.amt_granted}/>
+                            </FormGroup>
+                        </Col>
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="edit-amt_paid">Importe pagado</Label>
+                                <Input type="number" name="edit-amt_paid" id="edit-amt_paid" min="0" bind:value={currentAid.amt_paid}/>
                             </FormGroup>
                         </Col>
                     </Row>

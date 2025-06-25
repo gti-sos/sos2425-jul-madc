@@ -1,10 +1,5 @@
 <svelte:head>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </svelte:head>
 <!-- svelte-ignore css_unused_selector -->
 <style>
@@ -111,7 +106,7 @@
 <script>
 // @ts-nocheck
 
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     //import ApexCharts from 'svelte-axpecharts';
@@ -123,92 +118,99 @@
     let alertType = "success";
     let alertVisible = false;
 
-    let loadingG13= false;
-    let loadingG14= false;
-    let loadingG20= false;
-
-    let loadingCastLeon= false;
-
     let DEVEL_HOST = "http://localhost:3000";
     let API = "/api/v2/dana-grants-subsidies-stats";
+    let HOSTG14 = "https://sos2425-14.onrender.com";
+    let APIG14 = HOSTG14 + "/api/v1/employment-data";
 
     if (dev) API = DEVEL_HOST + API;
 
     //G14
     let employment_data={};
-    let aids1={};
+    let aids={};
 
     // @ts-ignore
 
     // Función principal que carga y muestra el gráfico
 
-async function processGraphG14() {
-    let HOSTG14 = "https://sos2425-14.onrender.com";
-    let APIG14 = HOSTG14 + "/api/v1/employment-data";
-    loadingG14 = true;
-    
-    const figureDom = document.getElementById('G14');
-    if (figureDom) {
-        figureDom.innerHTML = '<div class="loading-spinner"><p>Cargando datos de G14...</p><div class="spinner"></div></div>';
+    async function getAidsData() {
+        try {
+            let res = await fetch(API);
+            let json = await res.json();
+
+            json.filter(obj => obj.purpose === "Acceso a la vivienda y fomento de la edificación") //Fomento del Empleo
+            .forEach(obj => {
+                if (!aids[obj.month]) {
+                    aids[obj.month] = 1;
+                } else {
+                    aids[obj.month] = aids[obj.month] + 1;
+                }
+            });
+
+            aids = Object.entries(aids).sort((key, value) => key).map(([key, value]) => {
+                let obj = {};
+                obj[key] = value;
+                return obj;
+            });
+            //console.log(aids);
+            
+        } catch (err) {
+            showAlert("No se pudo conectar con el servidor", "danger");
+        }
     }
 
-    try {
-        // Realizar peticiones en paralelo para mejor rendimiento
-        const [dataResponse, dataG14Response] = await Promise.allSettled([
-            fetch(API),
-            fetch(APIG14)
-        ]);
-        
-        // Verificar si alguna petición falló
-        if (dataResponse.status === 'rejected') {
-            throw new Error("Error al obtener datos de API principal");
+    async function getEmploymentData() {
+         try {
+            let res = await fetch(APIG14);
+            let json = await res.json();
+
+            let objData= json.filter(obj => obj.autonomous_community === "Comunitat Valenciana");
+            let objeto={};
+
+            objData.forEach(obj => {
+                const year = obj.year;
+
+                if (!objeto[year]) {
+                    objeto[year] = {
+                        employment_rate: obj.employment_rate,
+                        unemployment_rate: obj.unemployment_rate,
+                        cont: 1
+                    };
+                } else {
+                    objeto[year].employment_rate += obj.employment_rate;
+                    objeto[year].unemployment_rate += obj.unemployment_rate;
+                    objeto[year].cont= objeto[year].cont + 1;
+                }
+            });
+
+            objeto= Object.entries(objeto).map(([k, v])=> {
+                let employment_rate= v.employment_rate/v.cont;
+                let unemployment_rate= v.unemployment_rate/v.cont;
+
+                v.employment_rate= employment_rate;
+                v.unemployment_rate= unemployment_rate;
+                delete v.cont;
+                return [k, v];
+            }).map(([k,v])=> {
+                let obj={};
+                obj[k]= v;
+                return obj;
+            });
+            employment_data= objeto;
+            console.log(employment_data);
+
+        } catch (err) {
+            showAlert("No se pudo conectar con el servidor", "danger");
         }
-        
-        if (dataG14Response.status === 'rejected') {
-            throw new Error("Error al obtener datos de G14");
-        }
-        
-        // Procesar respuestas
-        const res = await dataResponse.value.json();
-        const resG14 = await dataG14Response.value.json();
-        const pobComValenc2024_100mil = (1991259 + 2710808 + 615188)/100000;
+    }
 
-        // Filtrar y contar subvenciones con propósito de Empleo por mes
-        res.filter(obj => obj.purpose === "Fomento del Empleo").forEach(obj => {
-            if (!aids1[obj.month]) {
-                aids1[obj.month] = 1;
-            } else {
-                aids1[obj.month] = aids1[obj.month] + 1;
-            }
-        });
+    async function renderChart() {
+        await tick(); // <- asegura que el DOM esté renderizado antes de dibujar el gráfico
         
-        aids1 = Object.entries(aids1).sort((key, value) => key).map(([key, value]) => {
-            let obj = {};
-            obj[key] = value;
-            return obj;
-        });
-        
-        resG14.filter(obj => obj.autonomous_community === "Comunitat Valenciana").forEach(obj => {
-            if (!employment_data[obj.year]) {
-                employment_data[obj.year] = {
-                    year: obj.year,
-                    employment_rate: obj.employment_rate,
-                    unemployment_rate: obj.unemployment_rate
-                };
-            }
-        });
+        const pobComValenc2024 = (1991259 + 2710808 + 615188);
+        const years = Object.keys(employment_data);
+        const subvRates = Object.values(aids).map(value => (Object.values(value)/pobComValenc2024)*10000000);
 
-        // Convertir employment_data a array ordenado por año
-        employment_data = Object.entries(employment_data).sort((key, value) => key).map(([key, value]) => {
-            let obj = {}
-            obj[value.year] = {employment_rate: value.employment_rate, unemployment_rate: value.unemployment_rate};
-            return obj;
-        });
-
-        // Preparar datos para el gráfico
-        const years = Object.values(employment_data).map(value => Object.keys(value)[0]);
-        const subvRates = [0].concat(Object.values(aids1).map(value => Object.values(value)[0]/pobComValenc2024_100mil));
-        
         const employmentRates = employment_data.map(item => {
             const data = Object.values(item)[0];
             return data.employment_rate;
@@ -218,16 +220,13 @@ async function processGraphG14() {
             const data = Object.values(item)[0];
             return data.unemployment_rate;
         });
-        
 
-        figureDom.innerHTML = '<div id="G14" class="apexcharts-figure"></div>';
-        // Inicializando ApexCharts con los datos procesados
-        const chartDom = figureDom.childNodes[0];
+        let container= document.getElementById("container");
         
         const options = {
             series: [
                 {
-                    name: 'Tasa de Subvenciones de Fomento del Empleo (por cada 100 mil habitantes)',
+                    name: 'Tasa de Subvenciones de Fomento del Empleo (por cada 10 mill habitantes)',
                     type: 'column',
                     data: subvRates
                 }, 
@@ -330,28 +329,34 @@ async function processGraphG14() {
             }
         };
 
-        const chart = new ApexCharts(chartDom, options);
+        const chart = new ApexCharts(container, options);
         chart.render();
         
         // Manejar el redimensionamiento
         window.addEventListener('resize', function() {
             chart.render();
         });
-    } catch (err) {
-        if (figureDom) {
-            figureDom.innerHTML = '<div class="error-message">Error al cargar los datos de G14</div>';
-        }
-        showAlert("No se pudo cargar el gráfico G14", "danger");
-        console.error("Error en G14:", err);
-    } finally {
-        loadingG14 = false;
     }
+
+    async function waitForApexCharts() {
+        return new Promise((resolve, reject) => {
+            const check = () => {
+                if (window.ApexCharts) resolve();
+                else setTimeout(check, 100); // vuelve a intentar cada 100ms
+            };
+            check();
+    });
 }
 
+    async function processGraphs() {
+        await getAidsData();
+        await getEmploymentData();
+        await waitForApexCharts();
+        await renderChart();
+    }
+
 onMount(() => {
-    // Ejecutar cada función de forma independiente
-    // Si una falla, las demás seguirán ejecutándose
-    processGraphG14().catch(err => console.error("Error al iniciar G14:", err));
+    processGraphs();
 });
 
     // @ts-ignore
@@ -368,10 +373,10 @@ onMount(() => {
 <figure id="G14" class="apexcharts-figure">
     <div id="container"></div>
     <p class="apexcharts-description">
-        En este gráfico, se muestra la distribución del total de ayudas y subvenciones
-        solicitadas y concedidas (durante el último trimestre del 2024) a las empresas e instituciones
-        de Valencia afectadas por la DANA, en función del propósito,
-        comparando la distribución del total de multas registradas en Valencia durante el 2023, en función del tipo.
+        En este gráfico, se muestra la evolución mensual (último trimestre del 2024)
+        de las tasas de ayudas y subvenciones concedidas a las empresas e instituciones
+        de la Comunidad Valenciana afectadas por la DANA (por cada millón de habitantes),
+        comparándose con la evolución anual de la tasa de desempleo de la Comunidad Valenciana.
     </p>
 </figure>
 

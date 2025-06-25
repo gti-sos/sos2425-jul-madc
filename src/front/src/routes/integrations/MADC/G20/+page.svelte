@@ -104,11 +104,11 @@
 <script>
 // @ts-nocheck
 
-    import { onMount } from "svelte";
+    import { onMount, tick} from "svelte";
     import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     //import ApexCharts from 'svelte-axpecharts';
-    import Highcharts from 'highcharts';
+    import * as echarts from 'echarts';
     //import 
 
     // @ts-ignore
@@ -116,74 +116,72 @@
     let alertType = "success";
     let alertVisible = false;
 
-    let loadingG13= false;
-    let loadingG14= false;
-    let loadingG20= false;
-
-    let loadingCastLeon= false;
-
     let DEVEL_HOST = "http://localhost:3000";
     let API = "/api/v2/dana-grants-subsidies-stats";
+    let HOSTG20 = "https://sos2425-20.onrender.com";
+    let APIG20 = HOSTG20 + "/api/v2/fines";
 
     if (dev) API = DEVEL_HOST + API;
     
     //G20
     let fines={};
-    let finValencia={};
     let aids={};
 
-async function processGraphG20() {
-    let HOSTG20 = "https://sos2425-20.onrender.com";
-    let APIG20 = HOSTG20 + "/api/v2/fines";
-    loadingG20 = true;
+    let aidsPurposesAndfinesTypes = [];
 
-    const figureDom = document.getElementById('G20');
-    if (figureDom) {
-        figureDom.innerHTML = '<div class="loading-spinner"><p>Cargando datos de G20...</p><div class="spinner"></div></div>';
+    async function getAidsData() {
+        try {
+            let res = await fetch(API);
+            let json = await res.json();
+
+            json.forEach(obj => {
+                if (!aids[obj.purpose]) {
+                    aids[obj.purpose] = 1;
+                } else {
+                    aids[obj.purpose] = aids[obj.purpose] + 1;
+                }
+            });
+
+            aids = Object.fromEntries(Object.entries(aids).filter(([key, value]) => value > 1));
+            aids = Object.entries(aids).map(([key, value]) => ({ name: key, value: value }));
+            
+        } catch (err) {
+            showAlert("No se pudo conectar con el servidor", "danger");
+        }
     }
 
-    try {
-        // Realizar peticiones en paralelo
-        const [dataResponse, dataG20Response] = await Promise.allSettled([
-            fetch(API),
-            fetch(APIG20)
-        ]);
-        
-        // Verificar si alguna petición falló
-        if (dataResponse.status === 'rejected') {
-            throw new Error("Error al obtener datos de API principal");
+    async function getFinesData() {
+        try {
+            let res = await fetch(APIG20);
+            let json = await res.json();
+
+            fines= json.filter(fin => fin.city === "Valencia" && fin.year=== 2023).flatMap(fin => {
+                return Object.entries(fin)
+                        .filter(([k]) => k !== "city" && k !== "year")
+                        .map(([k, v]) => ({ name: k, value: v }));
+            });
+            
+        } catch (err) {
+            showAlert("No se pudo conectar con el servidor", "danger");
         }
+    }
+
+    async function renderChart() {
+        await tick(); // <- asegura que el DOM esté renderizado antes de dibujar el gráfico
         
-        if (dataG20Response.status === 'rejected') {
-            throw new Error("Error al obtener datos de G20");
+        aidsPurposesAndfinesTypes= ([...aids, ...fines]).map(item => item.name);
+        
+        let container= document.getElementById("container");
+        container.style="style=width: 100%; height: 550px;";
+
+        if (echarts.getInstanceByDom(container)) {
+            echarts.dispose(container);
         }
-        
-        // Procesar respuestas
-        const res = await dataResponse.value.json();
-        const res1 = await dataG20Response.value.json();
+        const myChart = echarts.init(container);
 
-        res.filter(obj => obj.purpose !== null).forEach(obj => {
-            if (!aids[obj.purpose]) {
-                aids[obj.purpose] = 1;
-            } else {
-                aids[obj.purpose] = aids[obj.purpose] + 1;
-            }
-        });
+        //console.log(container);
+        //console.log(myChart);
 
-        aids = Object.fromEntries(Object.entries(aids).filter(([key, value]) => value > 1));
-        aids = Object.entries(aids).map(([key, value]) => ({ name: key, value: value }));
-        let aidsPurposesAndfinesTypes = [];
-
-        fines = res1.filter(fin => fin.city === "Valencia");
-        fines = Object.entries(fines[0]).filter(([key, value]) => key !== "year" && key !== "city").map(([key, value]) => ({ name: key, value }));
-        aidsPurposesAndfinesTypes = [...aids, ...fines].map(el => el.name);
-        
-        figureDom.innerHTML = '<div id="echarts-container" style="width: 100%; height: 550px;"></div>';
-        
-        // Inicializando ECharts con los datos procesados
-        const chartDom = figureDom.childNodes[0];
-        const myChart = echarts.init(chartDom);
-        
         const option = {
             title: {
                 text: 'Distribución de Subvenciones en Valencia por Propósito\ncon\n Distribución de Multas en Valencia por Tipo (G20)',
@@ -194,7 +192,7 @@ async function processGraphG20() {
                 formatter: '{a} <br/>{b}: {d}% ({c})'
             },
             legend: {
-                aidsPurposesAndfinesTypes,
+                data: aidsPurposesAndfinesTypes,
                 orient: 'horizontal',
                 bottom: '0%',
                 left: 'center',
@@ -271,21 +269,16 @@ async function processGraphG20() {
         window.addEventListener('resize', function() {
             myChart.resize();
         });
-    } catch (err) {
-        if (figureDom) {
-            figureDom.innerHTML = '<div class="error-message">Error al cargar los datos de G20</div>';
-        }
-        showAlert("No se pudo cargar el gráfico G20", "danger");
-        console.error("Error en G20:", err);
-    } finally {
-        loadingG20 = false;
     }
-}
+
+    async function processGraphs() {
+        await getAidsData();
+        await getFinesData();
+        await renderChart();
+    }
 
 onMount(() => {
-    // Ejecutar cada función de forma independiente
-    // Si una falla, las demás seguirán ejecutándose
-    processGraphG20().catch(err => console.error("Error al iniciar G20:", err));
+    processGraphs();
 });
 
     // @ts-ignore
@@ -303,9 +296,9 @@ onMount(() => {
     <div id="container"></div>
     <p class="echarts-description">
         En este gráfico, se muestra la distribución del total de ayudas y subvenciones
-        solicitadas y concedidas (durante el último trimestre del 2024) a las empresas e instituciones
-        de Valencia afectadas por la DANA, en función del propósito,
-        comparando la distribución del total de multas registradas en Valencia durante el 2023, en función del tipo.
+        concedidas (durante el último trimestre del 2024) a las empresas e instituciones
+        de la provincia de Valencia afectadas por la DANA, según el propósito,
+        comparándose con la distribución del total de multas registradas en Valencia durante el 2023, según el caracter de multa.
     </p>
 </figure>
 

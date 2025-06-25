@@ -61,9 +61,10 @@
 <script>
 // @ts-nocheck
 
-    import { onMount } from "svelte";
+    import { onMount, tick } from "svelte";
     import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
+    import * as echarts from 'echarts';
     
     // @ts-ignore
     let alertMessage = "";
@@ -77,78 +78,91 @@
     let aids={};
     // @ts-ignore
 
-    async function processGraphs(){
-        try{
-            let data = await fetch(API);
-            let res = await data.json();
-            console.log(res);
+    async function getData() {
+		try {
+			const res = await fetch(API);
+			const json = await res.json();
 
-            res.filter(obj=> obj.benef_type!==null).forEach(obj =>{
-                if (!aids[obj.benef_type]) {
-                    aids[obj.benef_type] =  1;
-                } else {
-                    aids[obj.benef_type] = aids[obj.benef_type] + 1;
-                }
-            });
-            aids= Object.fromEntries(Object.entries(aids).filter(([key, value]) => value > 1));
-            aids = Object.entries(aids).map(([key, value]) => ({ name: key, value: value}));
-            console.log(aids);
+			let grouped = {};
+			json.forEach(obj => {
+					grouped[obj.benef_type] = (grouped[obj.benef_type] || 0) + 1;
+				});
 
-            // Inicializando ECharts con los datos predefinidos
-            const chartDom = document.getElementById('container');
-            const myChart = echarts.init(chartDom);
-            
-            const option = {
-                title: {
-                    text: 'Distribución de Subvenciones por Tipo de Beneficiario',
-                    left: 'center',
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{b}<br/><strong>{d}%</strong> ({c} ayudas)'
-                },
-                legend: {
-                    top: '10%',
-                    left: 'center'
-                },
-                series: [
-                    {
-                        name: 'Distribución de Subvenciones por Tipo de Beneficiario',
-                        type: 'pie',
-                        radius: ['35%', '70%'],
-                        center: ['50%', '70%'],
-                        startAngle: 180,
-                        endAngle: 360,
-                        labelLine: {
-                            show: true
-                        },
-                        label: {
-                            show: true,
-                            formatter: '{b}: {c}'
-                        },
-                        data: aids,
-                        emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
-                        }
-                    }
-                ]
-            };
+			// Filtrar beneficiarios con más de 1 ayuda
+			grouped = Object.fromEntries(Object.entries(grouped).filter(([_, value]) => value > 1));
 
-            option && myChart.setOption(option);
-            
-            // Manejar el redimensionamiento
-            window.addEventListener('resize', function() {
-                myChart.resize();
-            });
-        } catch(err) {
-            showAlert("No se pudo cargar el gráfico", "danger");
-            console.error(err);
-        }
-    }
+			// Transformar a formato compatible con ECharts
+			aids= Object.entries(grouped).map(([name, value]) => ({ name, value }));
+		} catch (err) {
+			showAlert("Error al obtener los datos", "danger");
+			console.error("Error en getData:", err);
+			aids={};
+		}
+	}
+
+    async function renderChart(data) {
+		await tick(); // Esperar a que el DOM esté listo
+        let container= document.getElementById("container");
+
+		if (!container) {
+			console.error("Contenedor del gráfico no encontrado");
+			return;
+		}
+
+		const myChart = echarts.init(container);
+
+		const option = {
+			title: {
+				text: 'Distribución de Subvenciones por Tipo de Beneficiario',
+				left: 'center'
+			},
+			tooltip: {
+				trigger: 'item',
+				formatter: '{b}<br/><strong>{d}%</strong> ({c} ayudas)'
+			},
+			legend: {
+				top: '10%',
+				left: 'center'
+			},
+			series: [
+				{
+					name: 'Distribución',
+					type: 'pie',
+					radius: ['35%', '70%'],
+					center: ['50%', '70%'],
+					startAngle: 180,
+					endAngle: 360,
+					labelLine: { show: true },
+					label: {
+						show: true,
+						formatter: '{b}: {c}'
+					},
+					data: data,
+					emphasis: {
+						itemStyle: {
+							shadowBlur: 10,
+							shadowOffsetX: 0,
+							shadowColor: 'rgba(0, 0, 0, 0.5)'
+						}
+					}
+				}
+			]
+		};
+
+		myChart.setOption(option);
+
+		// Ajuste al cambiar tamaño de pantalla
+		window.addEventListener('resize', () => {
+			myChart.resize();
+		});
+	}
+
+    async function processGraphs() {
+		await getData();
+		if (aids.length > 0) {
+			await renderChart(aids);
+		}
+	}
 
     onMount(() => {
         processGraphs();
@@ -168,9 +182,10 @@
 <figure class="echarts-figure">
     <div id="container"></div>
     <p class="echarts-description">
-        En este gráfico, se muestra la distribución del total de ayudas y subvenciones
-        solicitadas y concedidas (durante el último trimestre del 2024) a las empresas e instituciones
-        de la Comunidad Valenciana afectadas por la DANA, en función del tipo de beneficiario.
+        En este gráfico, se muestra, en función del tipo de beneficiario,
+        la distribución del total de ayudas y subvenciones
+        concedidas (durante el último trimestre del 2024) a las empresas e instituciones
+        de la Comunidad Valenciana afectadas por la DANA.
     </p>
 </figure>
 

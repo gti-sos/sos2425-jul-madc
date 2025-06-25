@@ -23,13 +23,13 @@ let objData=[];
 //let munData=[];
 async function readAllDataMADC(ruta) {
     const CAMPOS = {
-        "year": "integer", "month": "integer", "grant_date": "string", 'benef_id': "string",
-        "benef_name": "string", "benef_type": "string", "purpose": "string", "grantor": "string",
-        "grant_type": "string", "amt_granted": "float", "amt_paid": "float", "reimbursed": "float",
-        "refunded": "float", "region_name": "string", "sec_cod": "integer",
-        "sec_descr": "string", "aid_type": "string", "reg_base": "string", "fund_local": "float",
-        "fund_regional": "float", "fund_state": "float", "fund_eu": "float", "fund_other": "float",
-        "fund_type": "string", "prov_name": "string", "mun_name": "string"
+        "grant_date": "string", "year": "integer", "month": "integer",
+        "region_name": "string", "prov_name": "string", "mun_name": "string",
+        "grantor": "string",
+        'benef_id': "string", "benef_name": "string", "benef_type": "string",
+        "aid_type": "string", "purpose": "string",
+        "fund_type": "string", "fund_eu": "float", "fund_state": "float", "fund_regional": "float", "fund_local": "float", "fund_other": "float",
+        "amt_granted": "float", "amt_paid": "float"
     };
     let data = await fs.promises.readFile(ruta, 'utf8');
 
@@ -58,35 +58,6 @@ async function readAllDataMADC(ruta) {
     return data;
 }
 
-async function readAllDataMuncipalites(ruta) {
-    const CAMPOS = {
-        "prov_name": "string", "mun_name": "string",
-        "lat_etrs89": "float", "long_etrs89": "float"
-    };
-
-    let data = await fs.promises.readFile(ruta, 'utf8');
-
-    data = data.split(`\n`).map(line => {
-        line = line.split(`;`);
-        let obj = {};
-        Object.keys(CAMPOS).forEach((key, i) => {
-            let elem = line[i] ? line[i].trim().replace(/"/g, '') : null;
-
-            if (elem !== null) {
-                if (CAMPOS[key] === "float") {
-                    elem = parseFloat(elem.replace(',', '.'));
-                } else{
-                    if (elem.includes("/") && elem.split("/").length < 3) {
-                        elem = (key === "mun_name") ? elem.split("/")[1] : elem.split("/")[0];
-                    }
-                }
-            }
-            obj[key] = (elem === '' || elem === null) ? null : elem;
-        });
-        return obj;
-    }).filter(mun => mun.mun_name !== null && mun.mun_name !=="mun_name");
-    return data;
-}
 objData= await readAllDataMADC("./datasets/Ejemplo-Ayudas-Subvenciones-DANA-4TR(;).csv");
 //objDataAll= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
 //munData= await readAllDataMuncipalites("./datasets/municipios_fixed.csv");
@@ -97,7 +68,6 @@ objData= await readAllDataMADC("./datasets/Ejemplo-Ayudas-Subvenciones-DANA-4TR(
 const BASE_API = "/api/v2";
 let db_MADC = new dataStore();
 //let db_MADCAll = new dataStore();
-//let db_Municip= new dataStore();
 
 function loadBackendMADC(app){
     const MADCmainResource= "dana-grants-subsidies-stats";
@@ -110,12 +80,6 @@ function loadBackendMADC(app){
     /*db_MADCAll.find({}, (err, data)=>{
         if(data.length===0){
             db_MADCAll.insert(objDataAll);
-        }
-    })*/
-
-    /*db_Municip.find({}, (err, data)=>{
-        if(data.length===0){
-            db_Municip.insert(munData);
         }
     })*/
 
@@ -225,14 +189,8 @@ function loadBackendMADC(app){
         if(request.query.grant_type) q.grant_type= request.query.grant_type;
         if(request.query.amt_granted) q.amt_granted= parseFloat(request.query.amt_granted);
         if(request.query.amt_paid) q.amt_paid= parseFloat(request.query.amt_paid);
-        if(request.query.reimbursed) q.reimbursed= parseFloat(request.query.reimbursed);
 
-        if(request.query.refunded) q.refunded= parseFloat(request.query.refunded);
-        if(request.query.region_name) q.region_name= request.query.region_name;
-        if(request.query.sec_cod) q.sec_cod= parseInt(request.query.sec_cod);
-        if(request.query.sec_descr) q.sec_descr= request.query.sec_descr;
         if(request.query.aid_type) q.aid_type= request.query.aid_type;
-        if(request.query.reg_base) q.reg_base= request.query.reg_base;
 
         if(request.query.fund_local) q.fund_local= parseFloat(request.query.fund_local);
         if(request.query.fund_regional) q.fund_regional= parseFloat(request.query.fund_regional);
@@ -317,7 +275,7 @@ function loadBackendMADC(app){
             statusCode=401;
             return response.status(statusCode).json({"error": `No Autorizado`, "statusCode": statusCode});
         }
-        if(!newData || request.headers['content-type'] !== 'application/json' || !isJSONToPost(newData, 26)){
+        if(!newData || request.headers['content-type'] !== 'application/json' || !isJSONToPost(newData, 20)){
             statusCode=400;
             return response.status(statusCode).json({"error": "El cuerpo de la petición está vacío o mal formado", "statusCode": statusCode})
         }else{
@@ -367,7 +325,7 @@ function loadBackendMADC(app){
             return response.status(statusCode).json({"error": `No Autorizado`, "statusCode": statusCode});
         }
 
-        if(!newData || request.headers['content-type'] !== 'application/json' || !isJSONToPost(newData, 26) ||
+        if(!newData || request.headers['content-type'] !== 'application/json' || !isJSONToPost(newData, 20) ||
             !((munName=== newData.mun_name) && (month=== newData.month && (benefId=== newData.benef_id)))){
             statusCode=400;
             return response.status(statusCode).json({"error": "El cuerpo de la petición está vacío o mal formado", "statusCode": statusCode})
