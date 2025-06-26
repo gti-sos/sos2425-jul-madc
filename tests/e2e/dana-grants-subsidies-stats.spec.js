@@ -26,7 +26,7 @@ const nuevaSubvencion = {
     "amt_paid": 25000.00 
 };
 
-const tipoBenefActualizado = "PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA";
+const tipoBenefActualizado = "PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA";
 
 async function rellenarFormulario(page, datos) {
   for (const [key, value] of Object.entries(datos)) {
@@ -39,7 +39,7 @@ async function rellenarFormulario(page, datos) {
 
 async function filtrarPorBenefId(page, id) {
   await page.locator('#filtros').click();
-  await page.locator('h5:has-text("Beneficiario")').click();
+  await page.locator('#flecha-beneficiario').click();
   await page.locator('#filtroBenefId').fill(id);
   await page.getByRole('button', { name: 'Aplicar filtros' }).click();
 }
@@ -47,14 +47,16 @@ async function filtrarPorBenefId(page, id) {
 test.describe('Gestión de subvenciones - CRUD', () => {
   test('Crear subvención', async ({ page }) => {
     await page.goto(BASE_URL);
-    await expect(page.locator('h2')).toContainText('Ayudas y subvenciones solicitadas');
+    await expect(page.locator('h2:has-text("Ayudas y subvenciones solicitadas")')).toBeVisible();
 
     await page.getByText('Crear nueva subvención').click();
+    
+    await expect(page.locator('h4:has-text("Nueva subvención")')).toBeVisible();
 
     await rellenarFormulario(page, nuevaSubvencion);
     await page.getByRole('button', { name: 'Guardar' }).click();
 
-    await expect(page.locator('.alert-success')).toContainText('Subvención creada con éxito');
+    await expect(page.locator('div.alert:has-text("Subvención creada con éxito")')).toBeVisible();
     await expect(page.getByRole('cell', { name: nuevaSubvencion.benef_id })).toBeVisible();
   });
 
@@ -79,7 +81,7 @@ test.describe('Gestión de subvenciones - CRUD', () => {
     await inputNombre.fill(tipoBenefActualizado);
     await page.getByRole('button', { name: 'Guardar cambios' }).click();
 
-    await expect(page.locator('.alert-success')).toContainText('Subvención actualizada con éxito');
+    await expect(page.locator('div.alert:has-text("Subvención actualizada con éxito")')).toBeVisible();
     await expect(page).toHaveURL(BASE_URL);
 
     await filtrarPorBenefId(page, nuevaSubvencion.benef_id);
@@ -94,7 +96,7 @@ test.describe('Gestión de subvenciones - CRUD', () => {
     const fila = page.locator(`tr:has-text("${tipoBenefActualizado}")`);
     await fila.getByRole('button', { name: 'Eliminar' }).click();
 
-    await page.locator('.modal-footer button:has-text("Eliminar")').click();
+    await page.locator('.modal-footer button#confirmar-eliminacion').click();
 
 
     await expect(page.locator('.alert-success')).toContainText('Subvención eliminada con éxito');

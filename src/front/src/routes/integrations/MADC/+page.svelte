@@ -1,6 +1,8 @@
 <script>
-  import { Button } from'@sveltestrap/sveltestrap';
+	import { goto } from "$app/navigation";
+
 </script>
+
 
 <style>
   .center-container {
@@ -14,8 +16,8 @@
 </style>
 
 <div class="center-container">
-  <Button color="primary" href="/integrations/MADC/G14">G14</Button>
-  <Button color="primary" href="/integrations/MADC/G20">G20</Button>
-  <Button color="primary" href="/integrations/MADC/AidsCastillaLeon">Aids Castilla y León</Button>
-  <Button color="primary" href="/integrations/MADC/Weather-RuralHouses">Weather - Rural Houses</Button>
+  <button color="primary" on:click={() => goto('/integrations/MADC/G14')}>G14</button>
+  <button color="primary" on:click={() => goto('/integrations/MADC/G20')}>G20</button>
+  <button color="primary" on:click={() => goto('/integrations/MADC/AidsCastillaLeon')}>Aids Castilla y León</button>
+  <button color="primary" on:click={() => goto('/integrations/MADC/Weather-RuralHouses')}>Weather - Rural Houses</button>
 </div>

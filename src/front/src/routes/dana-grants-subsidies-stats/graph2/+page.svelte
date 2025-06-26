@@ -62,7 +62,6 @@
 // @ts-nocheck
 
     import { onMount, tick } from "svelte";
-    import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     import * as echarts from 'echarts';
     
@@ -190,7 +189,7 @@
 </figure>
 
 {#if alertVisible}
-<Alert color={alertType} isOpen={alertVisible} toggle={() => alertVisible = false}>
+<div class="alert" color={alertType} isOpen={alertVisible} toggle={() => alertVisible = false}>
     {alertMessage}
-</Alert>
+</div>
 {/if}

@@ -64,7 +64,6 @@
 // @ts-nocheck
 
     import { onMount, tick} from "svelte";
-    import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     
     // @ts-ignore
@@ -185,3 +184,9 @@
         de cada provincia de la Comunidad Valenciana afectadas por la DANA.
     </p>
 </figure>
+
+{#if alertVisible}
+<div class="alert" color={alertType} isOpen={alertVisible} toggle={() => alertVisible = false}>
+    {alertMessage}
+</div>
+{/if}

@@ -107,7 +107,6 @@
 // @ts-nocheck
 
     import { onMount, tick } from "svelte";
-    import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
     //import ApexCharts from 'svelte-axpecharts';
     import Highcharts from 'highcharts';
@@ -380,8 +379,11 @@ onMount(() => {
     </p>
 </figure>
 
-{#if alertVisible}
-<Alert color={alertType} isOpen={alertVisible} toggle={() => alertVisible = false}>
-    {alertMessage}
-</Alert>
-{/if}
+<div class="container fluid">
+    {#if alertVisible}
+        <div class="alert alert-{alertType} alert-dismissible fade show mt-3" role="alert" transition:fade>
+            {alertMessage}
+            <button type="button" class="btn-close" aria-label="Close" on:click={() => alertVisible = false}></button>
+        </div>
+    {/if}
+</div>
