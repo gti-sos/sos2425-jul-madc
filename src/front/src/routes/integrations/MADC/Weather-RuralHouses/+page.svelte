@@ -60,7 +60,6 @@
 // @ts-nocheck
 
     import { onMount } from "svelte";
-    import { Alert } from "@sveltestrap/sveltestrap";
     import { dev } from "$app/environment";
 	import Highcharts from "highcharts";
 

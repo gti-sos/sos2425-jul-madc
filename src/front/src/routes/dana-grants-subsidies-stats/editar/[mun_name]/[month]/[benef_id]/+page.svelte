@@ -2,26 +2,6 @@
     // @ts-nocheck
     import { dev } from "$app/environment";
     import { onMount } from "svelte";
-    import { 
-        Table, 
-        Container,
-        Row,
-        Col,
-        Modal,
-        ModalBody,
-        ModalHeader,
-        ModalFooter,
-        Form,
-        FormGroup,
-        Input,
-        Label,
-        Card,
-        CardBody,
-        CardHeader,
-        Collapse,
-        Alert, 
-    
-    } from '@sveltestrap/sveltestrap';
     import { fade, slide } from "svelte/transition";
     import { goto, replaceState } from '$app/navigation';
     import { page } from '$app/stores';
