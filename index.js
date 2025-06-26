@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import cors from "cors";
 import request from "request";
 import { loadBackendMADC } from "./src/back/index-MADC.js";
@@ -25,8 +25,8 @@ app.use("/about", express.static("./about/"));
 app.listen(PORT, () => {
   console.log(`Proyect ${PROYECTNAME} correctly deployed and running at port ${PORT}`);
 });
+*/
 
-/*
 import express from "express";
 import cors from "cors";
 import request from "request";
@@ -89,4 +89,4 @@ app.use("/about", express.static("./about/"));
 // Inicializar el servidor
 app.listen(PORT, () => {
   console.log(`Proyect ${PROYECTNAME} correctly deployed and running at port ${PORT}`);
-});*/
+});
