@@ -672,7 +672,7 @@
 						"exec": [
 							"pm.test(\"All resources retrieved\", function () {\r",
 							"    const responseJson= pm.response.json();\r",
-							"    pm.expect(responseJson.length).to.equal(23718);\r",
+							"    pm.expect(responseJson.length).to.equal(10);\r",
 							"    pm.response.to.have.status(200);\r",
 							"});"
 						],

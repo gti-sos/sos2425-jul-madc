@@ -70,7 +70,7 @@
     let alertVisible = false;
 
     let DEVEL_HOST = "http://localhost:3000";
-    let API = "/api/v2/dana-grants-subsidies-stats";
+    let API = "/api/v2/dana-grants-subsidies-stats/All";
     let HOSTG14 = "https://sos2425-14.onrender.com";
     let APIG14 = HOSTG14 + "/api/v1/employment-data";
 

@@ -4,23 +4,9 @@ import * as fs from "fs";
 import { request } from "http";
 import { response } from "express";
 
-//labs anteriores
-/*E*/
-function avgByMunName(arr, mun){
-    let aidByMunName= arr.filter(obj => Object.values(obj).find(value => value==mun));
-    let total_amt_granted= aidByMunName.reduce((acc, obj) => acc + Number.parseFloat(obj.amt_granted), 0);
-    return (total_amt_granted/aidByMunName.length);
-}
-
-//const mun= 'Elche';
-//let avg= `La media del monto de ayuda/subvencion concedida para el municipio de ${mun} es de ${avgByMunName(mun).toFixed(2)}€`;
-function avgByMunNameRes(){
-    console.log(avg);
-}
-
 let objData=[];
-//let objDataAll=[];
-//let munData=[];
+let objDataAll=[];
+
 async function readAllDataMADC(ruta) {
     const CAMPOS = {
         "grant_date": "string", "year": "integer", "month": "integer",
@@ -58,16 +44,13 @@ async function readAllDataMADC(ruta) {
     return data;
 }
 
-objData= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
-//objDataAll= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
-//munData= await readAllDataMuncipalites("./datasets/municipios_fixed.csv");
+objData= await readAllDataMADC("./datasets/Ejemplo-Ayudas-Subvenciones-DANA-4TR(;).csv");
+objDataAll= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
 
-//let pueblosdistintos= new Set(objData.map(e=> e.mun_name));
-//console.log(pueblosdistintos);
 
 const BASE_API = "/api/v2";
 let db_MADC = new dataStore();
-//let db_MADCAll = new dataStore();
+let db_MADCAll = new dataStore();
 
 function loadBackendMADC(app){
     const MADCmainResource= "dana-grants-subsidies-stats";
@@ -77,11 +60,11 @@ function loadBackendMADC(app){
             db_MADC.insert(objData);
         }
     })
-    /*db_MADCAll.find({}, (err, data)=>{
+    db_MADCAll.find({}, (err, data)=>{
         if(data.length===0){
             db_MADCAll.insert(objDataAll);
         }
-    })*/
+    })
 
     app.get(`${BASE_API}/${MADCmainResource}/loadInitialData`, (request, response) => {
         let statusCode=201;
@@ -94,7 +77,7 @@ function loadBackendMADC(app){
         })
     });
 
-    /*app.get(`${BASE_API}/${MADCmainResource}/All/loadInitialData`, (request, response) => {
+    app.get(`${BASE_API}/${MADCmainResource}/All/loadInitialData`, (request, response) => {
         let statusCode=201;
         db_MADCAll.find({}, (err, data)=>{
             if(data.length===0){
@@ -103,20 +86,9 @@ function loadBackendMADC(app){
             }
             return response.status(statusCode).json({"message": "Inicialización de datos consecutiva realizada correctamente", "statusCode": statusCode});
         })
-    });*/
-
-    app.get(`${BASE_API}/municipalities/loadInitialData`, (request, response) => {
-        let statusCode=201;
-        db_Municip.find({}, (err, data)=>{
-            if(data.length===0){
-                db_Municip.insert(munData);
-                return response.status(statusCode).json({"message": "Inicialización de datos realizada correctamente", "statusCode": statusCode});
-            }
-            return response.status(statusCode).json({"message": "Inicialización de datos consecutiva realizada correctamente", "statusCode": statusCode});
-        })
     });
 
-    /*app.get(`${BASE_API}/${MADCmainResource}/All`, (request, response) => {
+    app.get(`${BASE_API}/${MADCmainResource}/All`, (request, response) => {
         let statusCode= 200;
 
         db_MADCAll.find({}, (err, data)=>{
@@ -137,31 +109,8 @@ function loadBackendMADC(app){
                 }
             }  
         });
-    });*/
-
-    app.get(`${BASE_API}/municipalities`, (request, response) => {
-        let statusCode= 200;
-
-        db_Municip.find({}, (err, data)=>{
-            if(err){
-                statusCode= 500;
-                return response.status(statusCode).json({"error": "Error interno del servidor", "statusCode": statusCode});
-            }else{
-                if(data.length!==0){
-                    data= data.map(mun=>{
-                        delete mun._id;
-                        return mun;
-                    });
-                    return response.status(statusCode).json(data);
-                }else{
-                    statusCode= 404;
-                    let json404= {"error": `Recurso no encontrado`, "statusCode": statusCode};
-                    return response.status(statusCode).json(json404);
-                }
-            }  
-        });
     });
-    
+
     app.get(`${BASE_API}/${MADCmainResource}`, (request, response) => {
         let statusCode= 200;
         let q= {};

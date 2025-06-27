@@ -105,7 +105,7 @@
     let alertVisible = false;
 
     let DEVEL_HOST = "http://localhost:3000";
-    let API = "/api/v2/dana-grants-subsidies-stats";
+    let API = "/api/v2/dana-grants-subsidies-stats/All";
     let HOSTG20 = "https://sos2425-20.onrender.com";
     let APIG20 = HOSTG20 + "/api/v2/fines";
 
