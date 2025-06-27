@@ -6,7 +6,7 @@
     "scripts": {
         "start-front-dev": "npm run dev -- --open",
         "dev": "vite dev",
-        "build": "node debug.js && vite build ",
+        "build": "node debug.js && node --max-old-space-size=512 vite build ",
         "preview": "vite preview",
         "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
