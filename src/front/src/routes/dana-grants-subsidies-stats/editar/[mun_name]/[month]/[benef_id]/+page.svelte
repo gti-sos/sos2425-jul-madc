@@ -138,6 +138,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <!-- svelte-ignore a11y_label_has_associated_control -->
                                 <label>Mes</label>
                                 <p>{currentAid.month}</p> 
                             </div>
@@ -215,6 +216,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
+                                <!-- svelte-ignore a11y_label_has_associated_control -->
                                 <label>Municipio</label>
                                 <p>{currentAid.mun_name}</p>
                             </div>
