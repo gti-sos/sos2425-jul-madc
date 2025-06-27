@@ -58,7 +58,7 @@ async function readAllDataMADC(ruta) {
     return data;
 }
 
-objData= await readAllDataMADC("./datasets/Ejemplo-Ayudas-Subvenciones-DANA-4TR(;).csv");
+objData= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
 //objDataAll= await readAllDataMADC("./datasets/Ayudas-Subvenciones-DANA-4TR(;).csv");
 //munData= await readAllDataMuncipalites("./datasets/municipios_fixed.csv");
 

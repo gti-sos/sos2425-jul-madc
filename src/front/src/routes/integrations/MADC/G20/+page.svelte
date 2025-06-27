@@ -3,26 +3,19 @@
 </svelte:head>
 <!-- svelte-ignore css_unused_selector -->
 <style>
-    .echarts-figure,
-    .apexcharts-figure,
-    .highcharts-figure,
-    .charts-figure {
+    .echarts-figure {
         min-width: 310px;
         margin: 2em auto;
         text-align: center;
     }
 
-    .echarts-figure #container,
-    .apexcharts-figure #container,
-    .highcharts-figure #container,
-    .charts-figure #container{ 
+    .echarts-figure #container{ 
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    .echarts-figure .echarts,
-    .apexcharts-figure .apexcharts-canvas {
+    .echarts-figure .echarts{
         margin: 0 auto;
     }
 
@@ -62,9 +55,7 @@
         background: #f1f7ff;
     }
 
-    .echarts-description,
-    .apexcharts-description,
-    .highcharts-description {
+    .echarts-description {
         margin: 0 10px;
         text-align: center;
     }
@@ -106,9 +97,7 @@
 
     import { onMount, tick} from "svelte";
     import { dev } from "$app/environment";
-    //import ApexCharts from 'svelte-axpecharts';
     import * as echarts from 'echarts';
-    //import 
 
     // @ts-ignore
     let alertMessage = "";

@@ -3,70 +3,24 @@
 </svelte:head>
 <!-- svelte-ignore css_unused_selector -->
 <style>
-    .echarts-figure,
-    .apexcharts-figure,
-    .highcharts-figure,
-    .charts-figure {
+    .apexcharts-figure {
         min-width: 310px;
         max-width: 800px;
         margin: 2em auto;
         text-align: center;
     }
 
-    .echarts-figure #container,
-    .apexcharts-figure #container,
-    .highcharts-figure #container,
-    .charts-figure #container{ 
+    .apexcharts-figure #container{ 
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    .echarts-figure .echarts,
     .apexcharts-figure .apexcharts-canvas {
         margin: 0 auto;
     }
 
-    .echarts-data-table table {
-        font-family: Verdana, sans-serif;
-        border-collapse: collapse;
-        border: 1px solid #ebebeb;
-        margin: 10px auto;
-        text-align: center;
-        width: 100%;
-        max-width: 500px;
-    }
-
-    .echarts-data-table caption {
-        padding: 1em 0;
-        font-size: 1.2em;
-        color: #555;
-    }
-
-    .echarts-data-table th {
-        font-weight: 600;
-        padding: 0.5em;
-        margin-bottom: 4em;
-    }
-
-    .echarts-data-table td,
-    .echarts-data-table th,
-    .echarts-data-table caption {
-        padding: 0.5em;
-    }
-
-    .echarts-data-table thead tr,
-    .echarts-data-table tbody tr:nth-child(even) {
-        background: #f8f8f8;
-    }
-
-    .echarts-data-table tr:hover {
-        background: #f1f7ff;
-    }
-
-    .echarts-description,
-    .apexcharts-description,
-    .highcharts-description {
+    .apexcharts-description{
         margin: 0 10px;
         text-align: center;
     }
@@ -109,8 +63,6 @@
     import { onMount, tick } from "svelte";
     import { dev } from "$app/environment";
     //import ApexCharts from 'svelte-axpecharts';
-    import Highcharts from 'highcharts';
-    //import 
 
     // @ts-ignore
     let alertMessage = "";
