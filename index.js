@@ -1,12 +1,26 @@
-/*import express from "express";
+import express from "express";
 import cors from "cors";
 import request from "request";
 import { loadBackendMADC } from "./src/back/index-MADC.js";
 import { handler } from './src/front/build/handler.js';
+import * as fs from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const PROYECTNAME = `SOS2425-jul-madc`;
+
+if (process.env.NODE_ENV === 'production') {
+  console.log('Current working directory:', process.cwd());
+  console.log('__dirname:', __dirname);
+  console.log('Root directory contents:', fs.readdirSync('./'));
+  
+  // Si quieres ver específicamente el contenido de dist/
+  try {
+    console.log('dist/ contents:', fs.readdirSync('./dist/'));
+  } catch (err) {
+    console.log('dist/ directory not found or error:', err.message);
+  }
+}
 
 app.use(express.json());
 app.use(cors());
@@ -25,8 +39,8 @@ app.use("/about", express.static("./about/"));
 app.listen(PORT, () => {
   console.log(`Proyect ${PROYECTNAME} correctly deployed and running at port ${PORT}`);
 });
-*/
 
+/*
 import express from "express";
 import cors from "cors";
 import request from "request";
@@ -90,4 +104,4 @@ app.use("/about", express.static("./about/"));
 // Inicializar el servidor
 app.listen(PORT, () => {
   console.log(`Proyect ${PROYECTNAME} correctly deployed and running at port ${PORT}`);
-});
+});*/

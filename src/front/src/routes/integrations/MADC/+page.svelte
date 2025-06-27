@@ -18,6 +18,4 @@
 <div class="center-container">
   <button color="primary" on:click={() => goto('/integrations/MADC/G14')}>G14</button>
   <button color="primary" on:click={() => goto('/integrations/MADC/G20')}>G20</button>
-  <button color="primary" on:click={() => goto('/integrations/MADC/AidsCastillaLeon')}>Aids Castilla y León</button>
-  <button color="primary" on:click={() => goto('/integrations/MADC/Weather-RuralHouses')}>Weather - Rural Houses</button>
 </div>
