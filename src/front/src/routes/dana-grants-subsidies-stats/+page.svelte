@@ -657,6 +657,8 @@
 
                 <!-- Fecha -->
                 <div class="card mb-2">
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
                     <div class="card-header" on:click={() => showFecha = !showFecha} id="flecha-fecha" style="cursor: pointer;">
                         <h5>Fecha
                             <span style="float: right;">
@@ -693,6 +695,8 @@
 
                 <!-- Ubicación -->
                 <div class="card mb-2">
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_static_element_interactions -->
                     <div class="card-header" on:click={() => showUbicacion = !showUbicacion} id="flecha-ubicacion" style="cursor: pointer;">
                         <h5>Ubicación
                             <span style="float: right;">
@@ -728,6 +732,8 @@
 
                 <!-- Concedente -->
                 <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showConcedente = !showConcedente} id="flecha-concedente" style="cursor: pointer;">
                    <h5>Concedente
                         <span style="float: right;">
@@ -751,6 +757,8 @@
 
                 <!-- Beneficiario -->
                 <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showBeneficiario = !showBeneficiario} id="flecha-beneficiario" style="cursor: pointer;">
                     <h5>Beneficiario
                         <span style="float: right;">
@@ -786,6 +794,8 @@
 
                 <!-- Carácter -->
                 <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showCaracter = !showCaracter} id="flecha-caracter" style="cursor: pointer;">
                     <h5>Carácter
                         <span style="float: right;">
@@ -815,6 +825,8 @@
 
                 <!-- Financiación -->
                 <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showFinanciacion = !showFinanciacion} id="flecha-financiacion" style="cursor: pointer;">
                     <h5>Financiación
                         <span style="float: right;">
@@ -871,6 +883,8 @@
 
                 <!-- Estado ayuda -->
                 <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showEstado = !showEstado} id="flecha-estado" style="cursor: pointer;">
                     <h5>Estado
                         <span style="float: right;">
@@ -900,6 +914,8 @@
 
             <!-- Paginación -->
             <div class="card mb-2">
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div class="card-header" on:click={() => showPaginacion = !showPaginacion} id="flecha-paginacion" style="cursor: pointer;">
                     <h5>Paginación
                         <span style="float: right;">
@@ -1049,6 +1065,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Confirmar eliminación</h5>
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button type="button" class="btn-close" on:click={() => deleteModalOpen = !deleteModalOpen}></button>
                 </div>
                 <div class="modal-body">
@@ -1073,6 +1090,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Confirmar eliminación</h5>
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
                     <button type="button" class="btn-close" on:click={() => showDeleteAllModal = !showDeleteAllModal}></button>
                 </div>
                 <div class="modal-body">
