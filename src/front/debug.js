@@ -2,7 +2,6 @@ import * as fs from "fs";
 
 if (process.env.NODE_ENV === 'production') {
   console.log('Current working directory:', process.cwd());
-  console.log('__dirname:', __dirname);
   console.log('Root directory contents:', fs.readdirSync('./'));
   
   // Si quieres ver específicamente el contenido de dist/
