@@ -55,7 +55,8 @@ const possiblePaths = [
   join(__dirname, 'src/front/build/handler.js'),
   join(__dirname, 'front/build/handler.js'),
   './build/handler.js',
-  join(__dirname, 'build/handler.js')
+  join(__dirname, 'build/handler.js'),
+  '/opt/render/project/src/dist/handler.js'
 ];
 
 let handlerPath;
