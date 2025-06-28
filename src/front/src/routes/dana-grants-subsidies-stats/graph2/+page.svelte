@@ -92,6 +92,12 @@
 
 			// Transformar a formato compatible con ECharts
 			aids= Object.entries(grouped).map(([name, value]) => ({ name, value }));
+            aids= aids.filter(obj=> {
+                let tipoBenefs= ["GRAN EMPRESA", "PERSONAS FÍSICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA",
+                "PERSONAS JURÍDICAS QUE NO DESARROLLAN ACTIVIDAD ECONÓMICA",
+                "PYME Y PERSONAS FÍSICAS QUE DESARROLLAN ACTIVIDAD ECONÓMICA"];
+                return tipoBenefs.includes(obj.name);
+            });
 		} catch (err) {
 			showAlert("Error al obtener los datos", "danger");
 			console.error("Error en getData:", err);
