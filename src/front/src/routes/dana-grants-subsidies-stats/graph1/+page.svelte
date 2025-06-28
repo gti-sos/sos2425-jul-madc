@@ -72,7 +72,7 @@
     let alertVisible = false;
 
     let DEVEL_HOST = "http://localhost:3000";
-    let API = "/api/v2/dana-grants-subsidies-stats";
+    let API = "/api/v2/dana-grants-subsidies-stats/All";
     if (dev) API = DEVEL_HOST + API;
 
     // @ts-ignore
