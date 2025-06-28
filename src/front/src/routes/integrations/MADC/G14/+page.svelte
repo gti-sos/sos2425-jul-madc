@@ -89,7 +89,7 @@
             let res = await fetch(API);
             let json = await res.json();
 
-            json.filter(obj => obj.purpose === "Acceso a la vivienda y fomento de la edificación") //Fomento del Empleo
+            json.filter(obj => obj.purpose === "Fomento del Empleo") //Fomento del Empleo
             .forEach(obj => {
                 if (!aids[obj.month]) {
                     aids[obj.month] = 1;
@@ -160,7 +160,7 @@
         
         const pobComValenc2024 = (1991259 + 2710808 + 615188);
         const years = Object.keys(employment_data);
-        const subvRates = Object.values(aids).map(value => (Object.values(value)/pobComValenc2024)*10000000);
+        const subvRates = Object.values(aids).map(value => (Object.values(value)/pobComValenc2024)*100000);
 
         const employmentRates = employment_data.map(item => {
             const data = Object.values(item)[0];
@@ -177,7 +177,7 @@
         const options = {
             series: [
                 {
-                    name: 'Tasa de Subvenciones de Fomento del Empleo (por cada 10 mill habitantes)',
+                    name: 'Tasa de Subvenciones de Fomento del Empleo (por cada 100 mil habitantes)',
                     type: 'column',
                     data: subvRates
                 }, 
@@ -275,7 +275,7 @@
                 }
             },
             title: {
-                text: 'Evolución Subvenciones de Fomento de Empleo Comunidad Valenciana\ncon\nEvolución de Tasas de Desempleo (G14)',
+                text: 'Evolución Tasa Subvenciones y Desempleo Comunidad Valenciana (G14)',
                 align: 'center'
             }
         };

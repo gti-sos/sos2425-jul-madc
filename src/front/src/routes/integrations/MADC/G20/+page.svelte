@@ -5,6 +5,7 @@
 <style>
     .echarts-figure {
         min-width: 310px;
+        max-width: 800px;
         margin: 2em auto;
         text-align: center;
     }
@@ -132,6 +133,16 @@
 
             aids = Object.fromEntries(Object.entries(aids).filter(([key, value]) => value > 1));
             aids = Object.entries(aids).map(([key, value]) => ({ name: key, value: value }));
+            aids= aids.filter(obj=> {
+                let purposes= ["Acceso a la vivienda y fomento de la edificación", "Agricultura, Pesca y Alimentación",
+                "Comercio, Turismo y Pymes", "Cooperación internacional para el desarrollo y cultural",
+                "Cultura", "Defensa", "Desempleo", "Educación", "Fomento del Empleo", "Industria y Energía",
+                "Infraestructuras", "Investigación desarrollo e innovación", "Justicia",
+                "Otras actuaciones de carácter económico", "Otras Prestaciones económicas",
+                "Sanidad", "Servicios Sociales y Promoción Social", "Subvenciones al transporte"];
+
+                return purposes.includes(obj.name);
+            })
             
         } catch (err) {
             showAlert("No se pudo conectar con el servidor", "danger");
@@ -146,7 +157,16 @@
             fines= json.filter(fin => fin.city === "Valencia" && fin.year=== 2023).flatMap(fin => {
                 return Object.entries(fin)
                         .filter(([k]) => k !== "city" && k !== "year")
-                        .map(([k, v]) => ({ name: k, value: v }));
+                        .map(([k, v]) => {
+                            if(k==="fixed_radar"){
+                                k="Radar";
+                            }else if(k==="itv"){
+                                k="ITV";
+                            }else if(k==="alcohol_rate"){
+                                k="Alcoholemia";
+                            }
+                            return { name: k, value: v };
+                        });
             });
             
         } catch (err) {
@@ -292,7 +312,7 @@ onMount(() => {
 
 <div class="container fluid">
     {#if alertVisible}
-        <div class="alert alert-{alertType} alert-dismissible fade show mt-3" role="alert" transition:fade>
+        <div class="alert alert-{alertType} alert-dismissible show mt-3" role="alert" transition:fade>
             {alertMessage}
             <button type="button" class="btn-close" aria-label="Close" on:click={() => alertVisible = false}></button>
         </div>
