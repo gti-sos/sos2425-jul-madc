@@ -211,26 +211,26 @@
                 labels: {
                     format: '{value} subv.',
                     style: {
-                        color: Highcharts.getOptions().colors[1]
+                        color: Highcharts.getOptions().colors[2]
                     }
                 },
                 title: {
                     text: 'Subvenciones',
                     style: {
-                        color: Highcharts.getOptions().colors[1]
+                        color: Highcharts.getOptions().colors[2]
                     }
                 }
             }, { // Secondary yAxis
                 title: {
                     text: 'Potencia Eólica',
                     style: {
-                        color: Highcharts.getOptions().colors[0]
+                        color: Highcharts.getOptions().colors[3]
                     }
                 },
                 labels: {
                     format: '{value} MW',
                     style: {
-                        color: Highcharts.getOptions().colors[0]
+                        color: Highcharts.getOptions().colors[3]
                     }
                 },
                 opposite: true
@@ -302,8 +302,8 @@ onMount(() => {
     {/if}
     <div id="container"></div>
     <p class="highcharts-description">
-        En este gráfico, se muestra la evolución diaria del pico máximo de generación eléctrica eólica a
-        a nivel nacional, comparándose con la evolución del total de subvenciones diarias registradas en Valencia,
+        En este gráfico, se muestra la evolución diaria del pico máximo de generación eléctrica eólica
+         a nivel nacional, comparándose con la evolución del total de subvenciones diarias registradas en la Comunidad Valenciana,
         desde el 25 de octubre hasta el 25 de diciembre de 2024
     </p>
 </figure>
