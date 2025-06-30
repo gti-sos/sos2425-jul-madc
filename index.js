@@ -11,6 +11,16 @@ const PROYECTNAME = `SOS2425-jul-madc`;
 app.use(express.json());
 app.use(cors());
 
+//Proxy para REE
+const proxyPath = '/ree-proxy';
+const apiServerHost = 'https://demanda.ree.es/';
+
+app.use(proxyPath, function(req, res) {
+    const url = apiServerHost + req.url;
+    console.log(' Proxying to:', url);
+    req.pipe(request(url)).pipe(res);
+});
+
 // Cargar backends
 loadBackendMADC(app);
 

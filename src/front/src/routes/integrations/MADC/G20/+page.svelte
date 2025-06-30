@@ -105,6 +105,8 @@
     let alertType = "success";
     let alertVisible = false;
 
+    let loading = true;
+
     let DEVEL_HOST = "http://localhost:3000";
     let API = "/api/v2/dana-grants-subsidies-stats/All";
     let HOSTG20 = "https://sos2425-20.onrender.com";
@@ -280,9 +282,11 @@
     }
 
     async function processGraphs() {
+        loading = true;
         await getAidsData();
         await getFinesData();
         await renderChart();
+        loading = false;
     }
 
 onMount(() => {
@@ -301,6 +305,12 @@ onMount(() => {
 </script>
 
 <figure id="G20" class="echarts-figure">
+    {#if loading}
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+    {/if}
     <div id="container"></div>
     <p class="echarts-description">
         En este gráfico, se muestra la distribución del total de ayudas y subvenciones

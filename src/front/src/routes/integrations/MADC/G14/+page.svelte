@@ -69,6 +69,8 @@
     let alertType = "success";
     let alertVisible = false;
 
+    let loading = true;
+
     let DEVEL_HOST = "http://localhost:3000";
     let API = "/api/v2/dana-grants-subsidies-stats/All";
     let HOSTG14 = "https://sos2425-14.onrender.com";
@@ -300,10 +302,12 @@
 }
 
     async function processGraphs() {
+        loading = true;
         await getAidsData();
         await getEmploymentData();
         await waitForApexCharts();
         await renderChart();
+        loading = false;
     }
 
 onMount(() => {
@@ -322,6 +326,12 @@ onMount(() => {
 </script>
 
 <figure id="G14" class="apexcharts-figure">
+    {#if loading}
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+    {/if}
     <div id="container"></div>
     <p class="apexcharts-description">
         En este gráfico, se muestra la evolución mensual (último trimestre del 2024)

@@ -105,6 +105,8 @@
     let alertType = "success";
     let alertVisible = false;
 
+    let loading = true;
+
     let HOSTG13 = "https://sos2425-13.onrender.com";
     let APIG13 = HOSTG13 + "/api/v2/national-parks";
 
@@ -214,8 +216,10 @@
     }
 
     async function processGraphs() {
+        loading = true;
         await getNationalParksData();
         await renderChart();
+        loading = false;
     }
 
 onMount(() => {
@@ -234,6 +238,12 @@ onMount(() => {
 </script>
 
 <figure id="G13" class="echarts-figure">
+    {#if loading}
+    <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
+    </div>
+    {/if}
     <div id="container"></div>
     <p class="echarts-description">
         En este gráfico, se muestra el área total

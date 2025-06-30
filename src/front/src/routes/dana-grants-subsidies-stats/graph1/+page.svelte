@@ -89,7 +89,7 @@
                 }
 
                 if (aids[obj.month][obj.prov_name]) {
-                    aids[obj.month][obj.prov_name] += Math.round(obj.amt_granted);
+                    aids[obj.month][obj.prov_name] = Math.round(aids[obj.month][obj.prov_name] + obj.amt_granted);
                 } else {
                     aids[obj.month][obj.prov_name] = Math.round(obj.amt_granted);
                 }
