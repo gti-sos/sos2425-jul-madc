@@ -131,15 +131,23 @@
                 }
             });
 
-            let diasExcl=["01-10-2024", "02-10-2024", "03-10-2024", "04-10-2024", "05-10-2024",
-                "06-10-2024", "07-10-2024", "08-10-2024", "09-10-2024", "10-10-2024",
-                "11-10-2024", "12-10-2024", "13-10-2024", "14-10-2024", "15-10-2024",
-                "16-10-2024", "17-10-2024", "18-10-2024", "19-10-2024", "20-10-2024",
-                "21-10-2024", "22-10-2024", "23-10-2024", "24-10-2024", "26-12-2025",
-                "27-12-2025", "28-12-2025", "29-12-2025", "30-12-2025", "31-12-2025"];
+            let diasExcl=["01/10/2024", "02/10/2024", "03/10/2024", "04/10/2024", "05/10/2024",
+                "06/10/2024", "07/10/2024", "08/10/2024", "09/10/2024", "10/10/2024",
+                "11/10/2024", "12/10/2024", "13/10/2024", "14/10/2024", "15/10/2024",
+                "16/10/2024", "17/10/2024", "18/10/2024", "19/10/2024", "20/10/2024",
+                "21/10/2024", "22/10/2024", "23/10/2024", "24/10/2024", "26/12/2025",
+                "27/12/2025", "28/12/2025", "29/12/2025", "30/12/2025", "31/12/2025"];
             aids = Object.fromEntries(Object.entries(aids).filter(([key, value]) => value > 1 && !diasExcl.includes(key)));
             aids = Object.entries(aids).map(([key, value]) => ({ name: key, value: value }));
-            aids= aids.sort((a, b) => a.name.localeCompare(b.name));
+            aids= aids.sort((a, b) => {
+                const [diaA, mesA, anioA] = a.name.split("/");
+                const [diaB, mesB, anioB] = b.name.split("/");
+
+                const fechaA = new Date(Number(anioA), Number(mesA) - 1, Number(diaA)); // mes: 0-indexado
+                const fechaB = new Date(Number(anioB), Number(mesB) - 1, Number(diaB));
+
+                return fechaA - fechaB;
+            });
             //let numeros= Object.values(aids).map(obj=> obj.value);
             //console.log(numeros);
             console.log(aids);
@@ -155,13 +163,25 @@
             
             console.log(data);
 
+            const fechasConAids = new Set(aids.map(obj => obj.name));
+
             data["days"].forEach(obj=>{
                 let date= obj.datetime.split("-");
                 let fecha= `${date[2]}/${date[1]}/${date[0]}`;
                 let object= {name: fecha, value: obj.precip};
-                weather.push(object);
+                if(fechasConAids.has(object.name)){
+                    weather.push(object);
+                }
             });
-            weather= weather.sort((a, b) => (a.name) - (b.name));
+            weather= weather.sort((a, b) => {
+                const [diaA, mesA, anioA] = a.name.split("/");
+                const [diaB, mesB, anioB] = b.name.split("/");
+
+                const fechaA = new Date(Number(anioA), Number(mesA) - 1, Number(diaA)); // mes: 0-indexado
+                const fechaB = new Date(Number(anioB), Number(mesB) - 1, Number(diaB));
+
+                return fechaA - fechaB;
+            });
             console.log(weather);
 
         } catch (error) {
