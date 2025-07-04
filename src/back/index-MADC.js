@@ -212,7 +212,7 @@ function loadBackendMADC(app){
     });
 
     app.get(`${BASE_API}/${MADCmainResource}/docs`, (request, response)=>{
-        response.redirect("https://documenter.getpostman.com/view/42356631/2sB2cU9Mdj");
+        response.redirect("https://documenter.getpostman.com/view/42356631/2sB34bMj8R");
     });
     
     //CREATE

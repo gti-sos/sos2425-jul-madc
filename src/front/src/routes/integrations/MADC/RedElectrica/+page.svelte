@@ -247,14 +247,16 @@
                 type: 'column',
                 yAxis: 1,
                 data: redElectrica.map(obj=> obj.value),
+                color: Highcharts.getOptions().colors[3],
                 tooltip: {
                     valueSuffix: ' MW'
                 }
 
             }, {
                 name: 'Subvenciones',
-                type: 'area',
+                type: 'spline',
                 data: aids.map(obj=> obj.value),
+                color: Highcharts.getOptions().colors[2],
                 tooltip: {
                     valueSuffix: ' subv.'
                 }
